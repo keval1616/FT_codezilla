@@ -2,9 +2,13 @@
 
 import 'package:codezilla/app_route.dart';
 import 'package:codezilla/schema/app_colors.dart';
+import 'package:codezilla/screen/editscan_screen/editscanscreen.dart';
 import 'package:codezilla/screen/home/homeController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,6 +19,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final homeScreenController = Get.put(HomeScreenController());
+  bool navigate = true;
+
+  Future _scanQR() async {
+    var camerastatus = await Permission.camera.status;
+    if(camerastatus.isGranted){
+      String? cameraScanResult = await scanner.scan();
+      print("****************************$cameraScanResult");
+      Navigator.of(context)
+          .push(MaterialPageRoute(
+          builder: (context) =>
+              EditscanScreen(
+                  link: cameraScanResult)));
+
+
+    }else {
+      var isGrant = await Permission.camera.request();
+      if(isGrant.isGranted){
+        String? cameraScanResult = await scanner.scan();
+        print(cameraScanResult);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +188,8 @@ Container(
               children: [
                 GestureDetector(
                   onTap: (){
-                    Get.toNamed(AppRouter.editscanScreen);
+                    _scanQR();
+                    // Get.toNamed(AppRouter.qrScannerPage);
                   },
                   child: Container(
                     width: 200,
