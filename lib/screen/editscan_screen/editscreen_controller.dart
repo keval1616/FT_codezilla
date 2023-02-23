@@ -9,9 +9,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditScreenController extends GetxController {
+ int? Exp;
+  RxBool addCategory = false.obs;
   File? image;
   final picker = ImagePicker();
-  List <String> Categories = ["#All","#Restorent","#Websites","#Buisness Center","#class"];
+  RxList  CategoriesList = ["#All","#Restorent","#Websites","#Buisness Center","#class"].obs;
   List <Image> IconImage = [
     Image.asset("assets/icon/icon.png"),
     Image.asset("assets/icon/icon2.png"),
@@ -35,6 +37,7 @@ class EditScreenController extends GetxController {
   final TextEditingController title = TextEditingController();
   final TextEditingController category = TextEditingController();
   final TextEditingController note = TextEditingController();
+  final TextEditingController newCategoryController = TextEditingController();
 
   late UserModel currentUser;
 }

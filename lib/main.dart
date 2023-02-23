@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: AppRouter.selectLanguageScreen,
+      initialRoute: AppRouter.editscanScreen,
       getPages: AppRouter.getPages,
       // home: HomeScreen(),
       debugShowCheckedModeBanner: false,

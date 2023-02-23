@@ -1,5 +1,3 @@
-
-
 import 'package:codezilla/model/user_model.dart';
 import 'package:codezilla/sevice/database_helper.dart';
 
@@ -27,11 +25,20 @@ class UserDatabaseHelper {
 
   static Future<void> updateUser(UserModel user) async {
     var database = await DatabaseHelper.instance.database;
-    await database!.update(tableName, user.toMap(), where: 'id = ?', whereArgs: [user.id],);
+    await database!.update(
+      tableName,
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
   }
 
   static Future<void> deleteUser(int id) async {
     var database = await DatabaseHelper.instance.database;
-    await database!.delete(tableName, where: 'id = ?', whereArgs: [id],);
+    await database!.delete(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
