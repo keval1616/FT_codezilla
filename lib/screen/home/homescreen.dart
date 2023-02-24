@@ -9,7 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  String? image;
+   HomeScreen({Key? key,  this.image}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -43,18 +44,22 @@ class _HomeScreenState extends State<HomeScreen> {
         leadingWidth: 40,
         centerTitle: false,
         leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
+          padding: const EdgeInsets.only(left: 10.0),
           child: Image.asset(
             "assets/home/codezilla.png",
-            width: 15,
-            height: 15,
+            width: 13,
+            height: 16,
           ),
         ),
         elevation: 0,
         backgroundColor: AppColor.conrainer,
         title: Text(
           "CodeZilla Wallet",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              fontFamily: 'MS Sans',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black),
         ),
         actions: [
           IconButton(
@@ -92,7 +97,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(homeScreenController.Categories[index]),
+                      child: Text(homeScreenController.Categories[index],
+                        style: TextStyle(
+                          fontFamily: 'MS Sans',
+                          fontSize: 14,
+                        ),
+                      ),
                     )),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -117,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.only(left: 12.0,right: 12,top: 7,bottom: 7),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -128,8 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             children: [
                               Container(
-                                width: 80,
-                                height: 80,
+                                width: 64,
+                                height: 64,
                                 child: Image.asset(
                                   "assets/icon/icon9.png",
                                   width: 60,
@@ -140,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               SizedBox(
-                                width: 10,
+                                width: 16,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,22 +161,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text(
                                     "KFC Menu",
                                     style: TextStyle(
+                                        fontFamily: 'MS Sans',
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 15),
+                                        fontSize: 16),
                                   ),
                                   Container(
-                                    width: 230,
-                                    height: 60,
+                                    width: 260,
+                                    height: 50,
                                     padding: new EdgeInsets.only(right: 13.0),
                                     child: Text(
+
                                       textAlign: TextAlign.start,
                                       maxLines: 2,
                                       'https://www.figma.com/file/VYXmVYfqWOExryQYXOA8hB/QR-Menu-(Copy)?node-id=126%3A154&t=f706OTpGbgGPI2dB-0',
                                       overflow: TextOverflow.ellipsis,
                                       style: new TextStyle(
-                                        fontSize: 13.0,
-                                        fontFamily: 'Roboto',
+                                        fontFamily: 'MS Sans',
+                                        fontSize: 12.0,
+
                                         color: Colors.black87,
                                         fontWeight: FontWeight.w300,
                                       ),
@@ -205,8 +218,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Get.toNamed(AppRouter.qrScannerPage);
                     },
                     child: Container(
-                      width: 200,
-                      height: 67,
+                      width: 240,
+                      height: 48,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.blueAccent),
@@ -214,17 +227,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(
                             left: 10.0, top: 5, bottom: 5),
                         child: Center(
-                          child: Row(
-                            children: [
-                              Image.asset("assets/home/camrera.png"),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                "CAMERA SCAN",
-                                style: TextStyle(color: Colors.white),
-                              )
-                            ],
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Row(
+                              children: [
+                                Image.asset("assets/home/camrera.png"),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  "CAMERA SCAN",
+                                  style: TextStyle(
+                                      fontFamily: 'MS Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.white),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -234,12 +254,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 50,
                   ),
                   Container(
-                    width: 100,
-                    height: 67,
+                    width: 84,
+                    height: 48,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
-                        border: Border.all(width: 0.4)),
+                        ),
                     child: Padding(
                       padding:
                           const EdgeInsets.only(left: 5, top: 5, bottom: 5),

@@ -27,12 +27,13 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
         ],
       ),
       bottomNavigationBar: BottomAppBar(
+
         child: Container(
           height: 330,
           width: double.maxFinite, //set your width here
           decoration: BoxDecoration(
             color: AppColor.conrainer,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(40.0)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
           ),
           child: Padding(
             padding: const EdgeInsets.only(left: 40.0, right: 40, top: 40),
@@ -42,6 +43,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                   "Your favorites restaurants \n QR menus in one place 😍 ",
                   textAlign: TextAlign.center,
                   style: TextStyle(
+                    fontFamily: 'MS Sans',
                       color: Colors.black,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
@@ -53,6 +55,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                   "Digital wallet for QR codes. Scan any QR code once and keep it in your pocket.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
+                    fontFamily: 'MS Sans',
                     color: Colors.black,
                     fontSize: 16,
                   ),
@@ -72,7 +75,9 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                       "English",
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          TextStyle(
+                              fontFamily: 'MS Sans',
+                              fontWeight: FontWeight.bold, fontSize: 20),
                     )),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -95,6 +100,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                       "العربية",
                       textAlign: TextAlign.center,
                       style: TextStyle(
+                          fontFamily: 'MS Sans',
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
                           color: Colors.white),

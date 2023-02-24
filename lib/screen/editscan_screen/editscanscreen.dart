@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:codezilla/schema/app_colors.dart';
 import 'package:codezilla/screen/editscan_screen/editscreen_controller.dart';
+import 'package:codezilla/screen/home/homescreen.dart';
 import 'package:codezilla/sevice/user_database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EditscanScreen extends StatefulWidget {
   final String? link;
@@ -76,12 +78,23 @@ class _EditscanScreenState extends State<EditscanScreen> {
               child: const Icon(
                 Icons.arrow_back_sharp,
                 color: Colors.blueAccent,
-                size: 38,
+                size: 30,
               )),
-          title: const Text(
-            "Edit scan",
-            style: TextStyle(color: Colors.black87),
+          title: Transform(
+            // you can forcefully translate values left side using Transform
+            transform:  Matrix4.translationValues(-20.0, 0.0, 0.0),
+            child:  const Text(
+              "Edit scan",
+              style: TextStyle(
+                  fontFamily: 'MS Sans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.black87),
+            ),
           ),
+
+
+
           centerTitle: false,
           elevation: 0,
         ),
@@ -130,6 +143,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                               color: Colors.black87,
+                                              fontFamily: 'MS Sans',
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -138,7 +152,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                         ),
                                         Container(
                                           width: 300,
-                                          height: 60,
+                                          height: 40,
                                           padding: const EdgeInsets.only(
                                               right: 13.0),
                                           child: Text(
@@ -196,14 +210,16 @@ class _EditscanScreenState extends State<EditscanScreen> {
                             TextField(
                               controller: editScreenController.title,
                               decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(top: 20),
+
                                   border: InputBorder.none,
                                   hintText: "Title",
                                   prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(10.0),
+                                    padding: const EdgeInsets.only(left: 15.0,right: 20),
                                     child: Image.asset(
                                       "assets/editscan/title.png",
-                                      width: 10,
-                                      height: 10,
+                                      width: 17,
+                                      height: 23,
                                     ),
                                   )),
                             ),
@@ -217,18 +233,21 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                 onTap: () {
                                   BottomSheetforcategory(context);
                                 },
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      "assets/editscan/cetagery.png",
-                                      width: 35,
-                                      height: 35,
-                                    ),
-                                    const SizedBox(
-                                      width: 16,
-                                    ),
-                                    const Text("Category")
-                                  ],
+                                child: Container(
+                                  height: 40,
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        "assets/editscan/cetagery.png",
+                                        width: 24,
+                                        height: 24,
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      const Text("Category")
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -238,125 +257,137 @@ class _EditscanScreenState extends State<EditscanScreen> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 12.0),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/home/gallery.png",
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(
-                                    width: 16,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      BottomSheetforicon(context);
-                                    },
-                                    child: Container(
-                                      width: 120,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: AppColor.buttonbaground,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 15,
-                                            height: 15,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(2),
-                                              color: Colors.black12,
+                              child: Container(
+                                height: 50,
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/home/gallery.png",
+                                      width: 24,
+                                      height: 24,
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        BottomSheetforicon(context);
+                                      },
+                                      child: Container(
+                                        width: 106,
+                                        height: 31,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: AppColor.buttonbaground,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 16,
+                                              height: 16,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(2),
+                                                color: Colors.black12,
+                                              ),
+                                              child: const Icon(
+                                                Icons.add,
+                                                color: Colors.white,
+                                                size: 12,
+                                              ),
                                             ),
-                                            child: const Icon(
-                                              Icons.add,
-                                              color: Colors.white,
-                                              size: 14,
+                                            const SizedBox(
+                                              width: 5,
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          const Text("Select Icon"),
-                                        ],
+                                            const Text("Select Icon"),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  const Text(
-                                    "or",
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      BottomSheetforimage(context);
-                                    },
-                                    child: Container(
-                                      width: 120,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: AppColor.buttonbaground,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 15,
-                                            height: 15,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(2),
-                                              color: Colors.black12,
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    const Text(
+                                      "or",
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        BottomSheetforimage(context);
+                                      },
+                                      child: Container(
+                                        width: 106,
+                                        height: 31,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: AppColor.buttonbaground,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 16,
+                                              height: 16,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(2),
+                                                color: Colors.black12,
+                                              ),
+                                              child: const Icon(
+                                                Icons.add,
+                                                color: Colors.white,
+                                                size: 12,
+                                              ),
                                             ),
-                                            child: const Icon(
-                                              Icons.add,
-                                              color: Colors.white,
-                                              size: 14,
+                                            const SizedBox(
+                                              width: 5,
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          const Text("Select Image"),
-                                        ],
+                                            const Text("Add Image"),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                       Obx(()=>
+                                         Container(
+                                          width: 30,
+                                          height: 30,
+
+                                      child: Image.asset(editScreenController.saveIcon.value??"",width: 30,height: 30,),
+                                      ),
+                                       ),
+
+                                  ],
+                                ),
                               ),
                             ),
                             const Divider(
                               thickness: 0.5,
                               color: Colors.grey,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12.0),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/editscan/note.png",
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(
-                                    width: 16,
-                                  ),
-                                  const Text("Note")
-                                ],
-                              ),
+                            TextField(
+                              controller: editScreenController.title,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(top: 20),
+
+                                  border: InputBorder.none,
+                                  hintText: "Note",
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.only(left: 15.0,right: 20),
+                                    child: Image.asset(
+                                      "assets/editscan/note.png",
+                                      width: 24,
+                                      height: 24,
+                                    ),
+                                  )),
                             ),
                             const Divider(
                               thickness: 0.5,
@@ -378,9 +409,11 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                   child: const Center(
                                       child: Text(
                                     "Delet",
-                                    style: TextStyle(
+                                    style:
+                                    TextStyle(
+fontFamily: 'DM Sans',
                                         color: Colors.white,
-                                        fontSize: 15,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold),
                                   )),
                                 ),
@@ -408,10 +441,11 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                     ),
                                     child: const Center(
                                         child: Text(
-                                      "save",
+                                      "Save",
                                       style: TextStyle(
+                                          fontFamily: 'MS Sans',
                                           color: Colors.white,
-                                          fontSize: 15,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.bold),
                                     )),
                                   ),
@@ -437,6 +471,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
 
   void BottomSheetforcategory(BuildContext context) {
     showModalBottomSheet<void>(
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
@@ -445,230 +480,251 @@ class _EditscanScreenState extends State<EditscanScreen> {
       ),
       context: context,
       builder: (BuildContext context) {
-        return SingleChildScrollView(
+        return Expanded(
           child: Obx(
-            () => Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)),
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            "Category",
-                            style: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                          const Spacer(),
-                          const Text(
-                            "Done",
-                            style: TextStyle(
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ],
+            () => Padding(
+              padding:  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "Category",
+                              style: TextStyle(
+                                fontFamily: 'MS Sans',
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                            ),
+                            const Spacer(),
+                            const Text(
+                              "Done",
+                              style: TextStyle(
+                                  fontFamily: 'MS Sans',
+                                  color: Colors.blueAccent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListView.builder(
-                              shrinkWrap: true,
-                              itemCount:
-                                  editScreenController.CategoriesList.length,
-                              physics: const BouncingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    child: Center(
-                                        child: Column(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              editScreenController.Exp = index;
-                                            });
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 25,
-                                                height: 25,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            80),
-                                                    border:
-                                                        Border.all(width: 1)),
-                                                child: Container(
-                                                  width: 10,
-                                                  height: 10,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius
-                                                          .circular(80),
-                                                      color:
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListView.builder(
+                                shrinkWrap: true,
+                                itemCount:
+                                    editScreenController.CategoriesList.length,
+                                physics: const BouncingScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Obx(()=>
+                                       Container(
+                                        child: Center(
+                                            child: Column(
+
+                                              mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  editScreenController.selectCategory.value = index;
+                                                });
+                                              },
+                                              child: Row(
+                                                children: [
+                                                     Row(
+                                                      children: [
+                                                        Container(
+                                                          width: 25,
+                                                          height: 25,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                      80),
+                                                              border:
+                                                                  Border.all(width: 1)),
+                                                          child: Obx(()=>
+                                                             Container(
+                                                              width: 10,
+                                                              height: 10,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius
+                                                                      .circular(80),
+                                                                  color:
+                                                                      editScreenController
+                                                                                  .selectCategory.value ==
+                                                                              index
+                                                                          ? Colors
+                                                                              .blueAccent
+                                                                          : Colors.white,
+                                                                  border: Border.all(
+                                                                      width: 1,
+                                                                      color: Colors.white)),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 20,
+                                                        ),
+                                                        Text(
                                                           editScreenController
-                                                                      .Exp ==
-                                                                  index
-                                                              ? Colors
-                                                                  .blueAccent
-                                                              : Colors.white,
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: Colors.white)),
-                                                ),
+                                                              .CategoriesList[index],
+                                                          style: const TextStyle(
+                                                              color: Colors.black87,
+                                                              fontSize: 15),
+                                                        ),
+                                                      ],
+                                                    ),
+
+                                                ],
                                               ),
-                                              const SizedBox(
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                editScreenController
-                                                    .CategoriesList[index],
-                                                style: const TextStyle(
-                                                    color: Colors.black87,
-                                                    fontSize: 15),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
+                                        )),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
-                                      ],
-                                    )),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }),
-                          Obx(
-                            () => Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: editScreenController.addCategory.value ==
-                                      true
-                                  ? Row(
-                                      children: [
-                                        Container(
-                                          width: 25,
-                                          height: 25,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(80),
-                                              border: Border.all(width: 1)),
-                                        ),
-                                        SizedBox(
-                                          width: 12,
-                                        ),
-                                        Container(
-                                          width: 200,
-                                          height: 35,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                          ),
-                                          child: TextField(
-                                            controller: editScreenController
-                                                .newCategoryController,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
+                                  );
+                                }),
+                            Obx(
+                              () => Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: editScreenController.addCategory.value ==
+                                        true
+                                    ? Row(
+                                        children: [
+                                          Container(
+                                            width: 25,
+                                            height: 25,
+                                            decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(10.0),
+                                                    BorderRadius.circular(80),
+                                                border: Border.all(width: 1)),
+                                          ),
+                                          SizedBox(
+                                            width: 12,
+                                          ),
+                                          Container(
+                                            width: 200,
+                                            height: 35,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                            ),
+                                            child: TextField(
+
+
+                                              controller: editScreenController
+                                                  .newCategoryController,
+                                              decoration: InputDecoration(
+
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10.0),
+                                                ),
+                                                filled: true,
+                                                fillColor:
+                                                    Colors.black12, //<-- SEE HERE
                                               ),
-                                              filled: true,
-                                              fillColor:
-                                                  Colors.black12, //<-- SEE HERE
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 12,
-                                        ),
-                                        GestureDetector(
-                                            onTap: () {
-                                              editScreenController
-                                                      .CategoriesList
-                                                  .add(editScreenController
-                                                      .newCategoryController
-                                                      .text);
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              editScreenController
-                                                  .addCategory.value = false;
-                                              editScreenController
-                                                  .newCategoryController
-                                                  .clear();
-                                            },
-                                            child: Text(
-                                              "Save",
-                                              style: TextStyle(
-                                                  color: Colors.blueAccent,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
-                                            ))
-                                      ],
-                                    )
-                                  : Container(),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8.0, top: 10, bottom: 50),
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {});
-                                  editScreenController.addCategory.value = true;
-                                },
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 25,
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                        color: Colors.blueAccent,
-                                        borderRadius: BorderRadius.circular(90),
-                                      ),
-                                      child: const Center(
-                                          child: Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                        size: 20,
-                                      )),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    const Text(
-                                      "Add a new category",
-                                      style: TextStyle(
-                                          color: Colors.black87, fontSize: 15),
-                                    ),
-                                  ],
-                                ),
+                                          SizedBox(
+                                            width: 12,
+                                          ),
+                                          GestureDetector(
+                                              onTap: () {
+                                                editScreenController
+                                                        .CategoriesList
+                                                    .add(editScreenController
+                                                        .newCategoryController
+                                                        .text);
+                                                FocusManager.instance.primaryFocus
+                                                    ?.unfocus();
+                                                editScreenController
+                                                    .addCategory.value = false;
+                                                editScreenController
+                                                    .newCategoryController
+                                                    .clear();
+                                              },
+                                              child: Text(
+                                                "Save",
+                                                style: TextStyle(
+                                                    color: Colors.blueAccent,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold),
+                                              ))
+                                        ],
+                                      )
+                                    : Container(),
                               ),
                             ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0, top: 10, bottom: 50),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {});
+                                    editScreenController.addCategory.value = true;
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 25,
+                                        height: 25,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blueAccent,
+                                          borderRadius: BorderRadius.circular(90),
+                                        ),
+                                        child: const Center(
+                                            child: Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                          size: 20,
+                                        )),
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                      const Text(
+                                        "Add a new category",
+                                        style: TextStyle(
+                                            color: Colors.black87, fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                )),
+                    ],
+                  )),
+            ),
           ),
         );
       },
@@ -696,22 +752,32 @@ class _EditscanScreenState extends State<EditscanScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(25.0),
-                  child: Row(
-                    children: const [
+                  child:Row(
+                    children: [
                       const Text(
-                        "Icons",
+                        "Icon",
                         style: TextStyle(
+                            fontFamily: 'MS Sans',
                             color: Colors.black87,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                            fontSize: 16),
                       ),
                       const Spacer(),
-                      const Text(
-                        "Done",
-                        style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                      GestureDetector(
+                        onTap: (){
+                          editScreenController.saveIcon.value = editScreenController.IconImageList.elementAt(editScreenController.selectIcon.value);
+                          print("*************************${editScreenController.saveIcon.value}");
+
+
+                        },
+                        child: const Text(
+                          "Done",
+                          style: TextStyle(
+                              fontFamily: 'MS Sans',
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
                       ),
                     ],
                   ),
@@ -725,7 +791,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                       SizedBox(
                           height: 345,
                           child: GridView.builder(
-                              itemCount: editScreenController.IconImage.length,
+                              itemCount: editScreenController.IconImageList.length,
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 4,
@@ -734,14 +800,33 @@ class _EditscanScreenState extends State<EditscanScreen> {
                               itemBuilder: (BuildContext context, int index) {
                                 return Padding(
                                   padding: const EdgeInsets.all(15.0),
-                                  child: Container(
-                                      width: 40,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(60),
-                                      ),
-                                      child: editScreenController
-                                          .IconImage[index]),
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      setState(() {
+                                        editScreenController.selectIcon.value = index;
+
+                                      });
+                                      print("####index####$index");
+
+                                    },
+                                    child: Obx(()=>
+                                      Container(
+                                          width: 40,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+
+                                            border:editScreenController.selectIcon.value == index?
+                                            Border.all(
+                                                color:Colors.blueAccent,width: 3
+                                            ): Border.all(
+                                                color:Colors.white
+                                            ),
+                                            borderRadius: BorderRadius.circular(60),
+                                          ),
+                                          child: Image.asset(editScreenController
+                                              .IconImageList[index].toString())),
+                                    ),
+                                  ),
                                 );
                               })),
                     ],
@@ -775,21 +860,23 @@ class _EditscanScreenState extends State<EditscanScreen> {
                 Padding(
                   padding: const EdgeInsets.all(25.0),
                   child: Row(
-                    children: const [
-                      Text(
-                        "Icons",
+                    children: [
+                      const Text(
+                        "Image",
                         style: TextStyle(
+                            fontFamily: 'MS Sans',
                             color: Colors.black87,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                            fontSize: 16),
                       ),
-                      Spacer(),
-                      Text(
+                      const Spacer(),
+                      const Text(
                         "Done",
                         style: TextStyle(
+                            fontFamily: 'MS Sans',
                             color: Colors.blueAccent,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                            fontSize: 16),
                       ),
                     ],
                   ),

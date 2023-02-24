@@ -22,7 +22,7 @@ class AppRouter {
     ),
     GetPage(
       name: homeScreen,
-      page: () => const HomeScreen(),
+      page: () =>  HomeScreen(),
     ),
     GetPage(
       name: editscanScreen,
