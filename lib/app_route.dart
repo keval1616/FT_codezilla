@@ -26,7 +26,7 @@ class AppRouter {
     ),
     GetPage(
       name: editscanScreen,
-      page: () => const EditscanScreen(),
+      page: () =>  EditscanScreen(),
     ),
     // GetPage(
     //   name: qrScannerPage,

@@ -31,11 +31,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final List<StreamSubscription> _streams = [];
 
-  // var locales = [
-  //   const Locale('en', ''),
-  //   const Locale('ar', ''),
-  // ];
-
   @override
   void initState() {
     WidgetsBinding.instance.addObserver;
@@ -58,8 +53,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: AppRouter.editscanScreen,
+      initialRoute: AppRouter.selectLanguageScreen,
       getPages: AppRouter.getPages,
+      translations: Messages(),
+      locale: Locale('en','US'),
       // home: HomeScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(brightness: Brightness.light),
@@ -70,6 +67,7 @@ class _MyAppState extends State<MyApp> {
       // translations: LocalizationService(),
     );
   }
+
 
   _internetAvailability() async {
     _streams.add(Connectivity()
@@ -90,33 +88,18 @@ class _MyAppState extends State<MyApp> {
       print(isInternetAvailable);
     }
   }
-// Future<Position> getGeoLocationPosition() async {
-//   bool serviceEnabled;
-//   LocationPermission permission;
-//   // Test if location services are enabled.
-//   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-//   if (!serviceEnabled) {
-//     // Location services are not enabled don't continue
-//     // accessing the position and request users of the
-//     // App to enable the location services.
-//     await Geolocator.openLocationSettings();
-//     return Future.error('Location services are disabled.');
-//   }
-//   permission = await Geolocator.checkPermission();
-//   if (permission == LocationPermission.denied) {
-//     permission = await Geolocator.requestPermission();
-//     if (permission == LocationPermission.denied) {
-//
-//       return Future.error('Location permissions are denied');
-//     }
-//   }
-//   if (permission == LocationPermission.deniedForever) {
-//     // Permissions are denied forever, handle appropriately.
-//     return Future.error(
-//         'Location permissions are permanently denied, we cannot request permissions.');
-//   }
-//   // When we reach here, permissions are granted and we can
-//   // continue accessing the position of the device.
-//   return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-// }
+
+}
+class Messages extends Translations {
+  @override
+  Map<String, Map<String, String>> get keys => {
+    'en_US': {
+      'hello': 'Hello World',
+      "CodeZilla Wallet": "CodeZilla Wallet",
+    },
+    'hi_IN': {
+      'hello': 'नमस्ते दुनिया',
+      "CodeZilla Wallet" :'नमस्ते दुनिया'
+    }
+  };
 }

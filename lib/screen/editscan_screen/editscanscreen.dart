@@ -1,32 +1,48 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:codezilla/app_route.dart';
+import 'package:codezilla/model/user_model.dart';
 import 'package:codezilla/schema/app_colors.dart';
 import 'package:codezilla/screen/editscan_screen/editscreen_controller.dart';
+import 'package:codezilla/screen/home/homeController.dart';
 import 'package:codezilla/screen/home/homescreen.dart';
 import 'package:codezilla/sevice/user_database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EditscanScreen extends StatefulWidget {
-  final String? link;
+  String? link;
 
-  const EditscanScreen({Key? key, this.link}) : super(key: key);
+   EditscanScreen({Key? key, this.link}) : super(key: key);
   @override
   State<EditscanScreen> createState() => _EditscanScreenState();
 }
 
 class _EditscanScreenState extends State<EditscanScreen> {
   final editScreenController = Get.put(EditScreenController());
+  final homeScreenController = Get.find<HomeScreenController>();
+final UserModel userModel=Get.arguments[0];
+  late SharedPreferences sharedPreferences;
+  @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    print(
-        "========###############################################++++ID  ${widget.link}");
+    editScreenController.title.text=userModel.title??'';
+    widget.link = userModel.url??"";
+    editScreenController.SelectCategories.value = userModel.category??"";
+    editScreenController.saveIcon.value = userModel.logo??"";
+    editScreenController.note.text = userModel.note??"";
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {});
   }
+
+
+
 
   Future getGalleryImage() async {
     final pickedFile = await editScreenController.picker
@@ -102,7 +118,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
           padding: const EdgeInsets.only(left: 12.0, right: 12),
           child: SingleChildScrollView(
             child: FutureBuilder(
-                future: UserDatabaseHelper.getUsers(),
+
                 builder: (ctx, snapshot) {
                   // if (snapshot.connectionState == ConnectionState.done) {
                   // if (snapshot.data!.isNotEmpty) {
@@ -229,24 +245,32 @@ class _EditscanScreenState extends State<EditscanScreen> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 12.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  BottomSheetforcategory(context);
-                                },
-                                child: Container(
-                                  height: 40,
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                        "assets/editscan/cetagery.png",
-                                        width: 24,
-                                        height: 24,
-                                      ),
-                                      const SizedBox(
-                                        width: 20,
-                                      ),
-                                      const Text("Category")
-                                    ],
+                              child: Obx(()=>
+                                  GestureDetector(
+                                  onTap: () {
+                                    BottomSheetforcategory(context);
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          "assets/editscan/cetagery.png",
+                                          width: 24,
+                                          height: 24,
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+
+                                          Container(
+                                            child: editScreenController.SelectCategories.value.isNotEmpty?
+                                            Text(editScreenController.SelectCategories.value):Text("Category"),
+                                          ),
+                                        
+
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -356,12 +380,14 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                         ),
                                       ),
                                     ),
+                                       SizedBox(width: 20,),
                                        Obx(()=>
                                          Container(
-                                          width: 30,
-                                          height: 30,
+                                          width: 40,
+                                          height: 40,
 
-                                      child: Image.asset(editScreenController.saveIcon.value??"",width: 30,height: 30,),
+                                      child:editScreenController.saveIcon.value.isNotEmpty?
+                                      Image.asset(editScreenController.saveIcon.value): Image.asset("assets/profile.jpeg"),
                                       ),
                                        ),
 
@@ -374,7 +400,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                               color: Colors.grey,
                             ),
                             TextField(
-                              controller: editScreenController.title,
+                              controller: editScreenController.note,
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.only(top: 20),
 
@@ -399,39 +425,53 @@ class _EditscanScreenState extends State<EditscanScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 151,
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: AppColor.deletbottoncolor,
-                                  ),
-                                  child: const Center(
-                                      child: Text(
-                                    "Delet",
-                                    style:
-                                    TextStyle(
-fontFamily: 'DM Sans',
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
                                 GestureDetector(
-                                  // onTap: () async {
-                                  //  UserModel user = UserModel(
-                                  //       title: editScreenController.title.text,
-                                  //    id: 1,
-                                  //    category: 'all', note: 'note', url: widget.link??"", logo: 'logo', image: 'image',
-                                  //
-                                  //   );
-                                  //  print("################################################$user");
-                                  //   await UserDatabaseHelper.createUser(user);
-                                  //   setState(() {});
-                                  // },
+                                  onTap:(){
+
+                                    editScreenController.userList.remove(userModel);
+
+                                    editScreenController.storedata();
+
+                                  },
+                                  child: Container(
+                                    width: 151,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: AppColor.deletbottoncolor,
+                                    ),
+                                    child: const Center(
+                                        child: Text(
+                                      "Delet",
+                                      style:
+                                      TextStyle(
+fontFamily: 'DM Sans',
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                  ),
+                                ),
+                                SizedBox(width: 30,),
+                                GestureDetector(
+                                  onTap: (){
+
+                                    editScreenController.userList.value.add(UserModel(
+                                      url: widget.link,
+                                        title: editScreenController.title.text,
+                                        category: editScreenController.SelectCategories.value,
+                                        note:editScreenController.note.text,
+                                        logo:editScreenController.saveIcon.value,
+                                      image: "assets/editscan/note.png",
+                                       ));
+                                    editScreenController.storedata();
+                                    print("*********************MOODEL****************************${editScreenController.userList.value.first.url}");
+                                    // Get.toNamed(AppRouter.homeScreen,arguments: [
+                                    //   widget.link,editScreenController.title.text, editScreenController.SelectCategories.value , editScreenController.note.text, editScreenController.saveIcon.value
+                                    // ]);
+                                    // storedata();
+                                    Get.toNamed(AppRouter.homeScreen);
+                                  },
                                   child: Container(
                                     width: 151,
                                     height: 48,
@@ -449,6 +489,9 @@ fontFamily: 'DM Sans',
                                           fontWeight: FontWeight.bold),
                                     )),
                                   ),
+                                ),
+                                const SizedBox(
+                                  width: 20,
                                 ),
                               ],
                             ),
@@ -508,13 +551,19 @@ fontFamily: 'DM Sans',
                                   fontSize: 16),
                             ),
                             const Spacer(),
-                            const Text(
-                              "Done",
-                              style: TextStyle(
-                                  fontFamily: 'MS Sans',
-                                  color: Colors.blueAccent,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
+                            GestureDetector(
+                              onTap: (){
+                                editScreenController.SelectCategories.value = editScreenController.CategoriesList.elementAt(editScreenController.selectCategory.value);
+                                print("=========category+++++++++++${editScreenController.SelectCategories.value}");
+                              },
+                              child: const Text(
+                                "Done",
+                                style: TextStyle(
+                                    fontFamily: 'MS Sans',
+                                    color: Colors.blueAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
+                              ),
                             ),
                           ],
                         ),
@@ -966,6 +1015,7 @@ fontFamily: 'DM Sans',
       await launchUrl(uri);
     } else {
       throw 'Could not launch $url';
+
     }
   }
 }
