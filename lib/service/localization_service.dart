@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:codezilla/language/en_us.dart';
+import 'package:codezilla/Localization/enUS.dart';
 import 'package:codezilla/pref/app_Prefrance.dart';
 import 'package:get/get.dart';
 

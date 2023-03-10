@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: AppRouter.selectLanguageScreen,
       getPages: AppRouter.getPages,
       translations: Messages(),
-      locale: Locale('en','US'),
+      locale: Locale('en_US'),
       // home: HomeScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(brightness: Brightness.light),
@@ -93,13 +93,28 @@ class _MyAppState extends State<MyApp> {
 class Messages extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
-    'en_US': {
+    'en': {
       'hello': 'Hello World',
       "CodeZilla Wallet": "CodeZilla Wallet",
+      "CAMERA SCAN":"CAMERA SCAN",
+      "#All":"#All",
+      "#Restorent":"#Restorent",
+      "#Websites": "#Websites",
+      "#Buisness Center":"#Buisness Center",
+      "#class" : "#class"
+
+
     },
-    'hi_IN': {
-      'hello': 'नमस्ते दुनिया',
-      "CodeZilla Wallet" :'नमस्ते दुनिया'
+    'ar_SA': {
+      "#All": "#الجميع",
+      'hello': 'مرحبًا',
+      "CodeZilla Wallet" :'كودزيلا والت ',
+      "CAMERA SCAN":"مسح الكاميرا",
+      "#Restorent":"#مصلح",
+      "#Websites" : "المواقع",
+      "#Buisness Center":"مركز الأعمال ",
+      "#class" : "فصل"
+
     }
   };
 }

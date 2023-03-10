@@ -92,7 +92,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    var locale = Locale('hi','IN');
+                    var locale = Locale('ar','SA');
                     Get.updateLocale(locale);
                     Get.toNamed(AppRouter.homeScreen);
 

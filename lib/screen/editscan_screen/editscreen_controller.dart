@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:codezilla/model/user_model.dart';
+import 'package:codezilla/screen/home/homeController.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -13,13 +14,14 @@ class EditScreenController extends GetxController {
   RxInt selectIcon = 0.obs;
   RxString saveIcon = "".obs;
   RxString SelectCategories = "".obs;
+  RxString Selectimage = "".obs;
 
   RxBool addCategory = false.obs;
   RxBool selecticon = false.obs;
   File? image;
   final picker = ImagePicker();
-  RxList CategoriesList =
-      ["#All", "#Restorent", "#Websites", "#Buisness Center", "#class"].obs;
+  // RxList  CategoriesList =
+  //     ["#All", "#Restorent", "#Websites", "#Buisness Center", "#class"].obs;
   List IconImageList = [
     "assets/icon/icon.png",
     "assets/icon/icon2.png",
@@ -47,13 +49,17 @@ class EditScreenController extends GetxController {
   final TextEditingController note = TextEditingController();
   final TextEditingController newCategoryController = TextEditingController();
   late SharedPreferences sharedPreferences;
-
+  final HomeScreenController _homeScreenController =
+      Get.find<HomeScreenController>();
   Future initalGetSavedData() async {
     sharedPreferences = await SharedPreferences.getInstance();
     final jsondetails = jsonDecode(sharedPreferences.getString('userdata')!);
     userList.value.clear();
+    _homeScreenController.homeUserList.clear();
     for (int i = 0; i < jsondetails.length; i++) {
       userList.add(UserModel.fromJson(jsondetails[i]));
+      _homeScreenController.homeUserList
+          .add(UserModel.fromJson(jsondetails[i]));
     }
     // Records userModel = Records.fromJson(jsondetails);
     // UserModel userModel = UserModel.fromJson(jsondetails);
@@ -72,7 +78,7 @@ class EditScreenController extends GetxController {
         "category": element.category,
         "note": element.note,
         "logo": element.logo,
-        "image": "assets/editscan/note.png",
+        "image": element.image,
       });
     });
     String userdata = jsonEncode(tempUserData);
@@ -80,10 +86,9 @@ class EditScreenController extends GetxController {
     await initalGetSavedData();
 
     // AppPrefef().chat = jsonEncode(tempChat);
-
-
   }
-  deletedata(){
+
+  deletedata() {
     // userList.remove(element)
   }
 }
