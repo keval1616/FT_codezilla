@@ -42,6 +42,10 @@ class AppPref {
   set isDark(bool value) => _preferences.setBool('isDark', value);
 
 
+  /// retrieve app current language
+  String get catList => _preferences.getString('catList') ?? '';
+  set catList(String value) =>
+      _preferences.setString('catList', value);
 
   void clear() async {
     _preferences.clear();

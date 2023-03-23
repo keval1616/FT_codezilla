@@ -6,6 +6,7 @@ import 'package:codezilla/screen/home/homeController.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,8 +19,8 @@ class EditScreenController extends GetxController {
 
   RxBool addCategory = false.obs;
   RxBool selecticon = false.obs;
-  File? image;
-  final picker = ImagePicker();
+  Rx<UserModel> userModel = Rx<UserModel>(UserModel());
+
   // RxList  CategoriesList =
   //     ["#All", "#Restorent", "#Websites", "#Buisness Center", "#class"].obs;
   List IconImageList = [
@@ -42,7 +43,8 @@ class EditScreenController extends GetxController {
   ];
 
   RxList<UserModel> userList = <UserModel>[].obs;
-
+  Rx<File> image = Rx<File>(File(""));
+  final picker = ImagePicker();
   final TextEditingController url = TextEditingController();
   final TextEditingController title = TextEditingController();
   final TextEditingController category = TextEditingController();
@@ -88,7 +90,60 @@ class EditScreenController extends GetxController {
     // AppPrefef().chat = jsonEncode(tempChat);
   }
 
-  deletedata() {
-    // userList.remove(element)
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile != null) {
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+
+        sourcePath: pickedFile.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+        ],
+      );
+      image.value = File(croppedFile!.path);
+    }
   }
+  Widget pickImage() {
+    if (image.value.path.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(59),
+        child: Image.file(
+          image.value,
+          height: 105,
+          width: 105,
+
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
+        ),
+      );
+    } else {
+      return ClipRRect(
+          borderRadius: BorderRadius.circular(59),
+          child: Image.asset(
+              saveIcon.value)
+        // Image.network(
+        //   "https://i.postimg.cc/YCVXmmHt/image-3.png",
+        //   height: 105,
+        //   width: 105,
+        // ),
+      );
+    }
+  }
+
 }

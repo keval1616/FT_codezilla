@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:codezilla/app_route.dart';
 import 'package:codezilla/schema/app_colors.dart';
 import 'package:codezilla/screen/editscan_screen/editscanscreen.dart';
@@ -19,9 +21,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final homeScreenController = Get.put(HomeScreenController());
   final editScreenController = Get.put(EditScreenController());
-
+  final homeScreenController = Get.find<HomeScreenController>();
   // var qrlink = Get.arguments[0];
   // var title = Get.arguments[1];
   // var categories = Get.arguments[2];
@@ -36,25 +37,60 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool navigate = true;
-
   Future _scanQR() async {
     var camerastatus = await Permission.camera.status;
     if (camerastatus.isGranted) {
-      String? cameraScanResult = await scanner.scan();
-      print("****************************$cameraScanResult");
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => EditscanScreen(link: cameraScanResult)));
+      homeScreenController.cameraScanResult.value = (await scanner.scan())!;
+      Get.toNamed(AppRouter.editscanScreen,);
+
+      // Navigator.of(context).push(MaterialPageRoute(
+      //     builder: (context) => EditscanScreen(link: cameraScanResult)));
     } else {
       var isGrant = await Permission.camera.request();
       if (isGrant.isGranted) {
-        String? cameraScanResult = await scanner.scan();
-        print(cameraScanResult);
+        homeScreenController.cameraScanResult.value = (await scanner.scan())!;
+
       }
     }
   }
 
+
+  getDataByCategory(int index){
+    // homeScreenController.homeUserList.value =
+    //     editScreenController.userList
+    //         .where((p0) =>
+    //     p0.category?.toLowerCase() ==
+    //         homeScreenController.categories[index].toLowerCase())
+    //         .toList();
+    // homeScreenController.homeUserList.refresh();
+    // print(homeScreenController.homeUserList.value );
+
+    homeScreenController.homeUserList.clear();
+    if(index==0){
+      homeScreenController.homeUserList.addAll(editScreenController.userList);
+      homeScreenController.homeUserList.refresh();
+    }else{
+
+      homeScreenController.homeUserList.clear();
+      for(int i=0;i<editScreenController.userList.length;i++){
+
+        // print(editScreenController.userList[i].category);
+        // print((homeScreenController.categories[j]));
+        if(editScreenController.userList[i].category==homeScreenController.categories[index]){
+          print("here");
+          homeScreenController.homeUserList.add(editScreenController.userList[i]);
+          print( "==============>   ${homeScreenController.homeUserList}");
+        }
+
+      }
+      homeScreenController.homeUserList.refresh();
+
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -104,47 +140,45 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Container(
               height: 50,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: homeScreenController.categories.length,
-                physics: BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-
-                        print(homeScreenController.categories[index]);
-                        homeScreenController.homeUserList.value =
-                            editScreenController.userList
-                                .where((p0) =>
-                                    p0.category?.toLowerCase() ==
-                                    homeScreenController.categories[index].toLowerCase())
-                                .toList();
-                        homeScreenController.homeUserList.refresh();
-                         print(homeScreenController.homeUserList.value );
-                      },
-                      child: Container(
-                        child: Center(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            homeScreenController.categories[index],
-                            style: TextStyle(
-                              fontFamily: 'MS Sans',
-                              fontSize: 14,
+              child: Obx(()=>
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: homeScreenController.categories.length,
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            homeScreenController.selectCategory.value = index;
+                          });
+                          print(homeScreenController.categories[index]);
+                          getDataByCategory(index);
+                        },
+                        child: Container(
+                          child: Center(
+                              child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              homeScreenController.categories[index],
+                              style: TextStyle(
+                                fontFamily: 'MS Sans',
+                                fontSize: 14,
+                                color: homeScreenController.selectCategory.value == index ? Colors.white : Colors.black
+                              ),
                             ),
+                          )),
+                          decoration: BoxDecoration(
+                            color: homeScreenController.selectCategory.value == index ? Colors.blueAccent : Colors.white,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        )),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
             // SizedBox(height: 150,),
@@ -167,15 +201,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Obx(
                             () => GestureDetector(
                               onTap: () {
-                                print(
-                                    "##############index########${homeScreenController.homeUserList.value[index].title}");
                                 Get.toNamed(AppRouter.editscanScreen,
                                     arguments: [
                                       homeScreenController
-                                          .homeUserList.value[index]
+                                          .homeUserList.value[index],
+                                      isupdate = true
                                     ]);
-                                print(
-                                    "##############index########${homeScreenController.homeUserList.value[index].image}");
+
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -190,23 +222,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                         onTap: () {
                                           print(
                                               "*********************IMAGE#################${homeScreenController.homeUserList.value[index].image}");
+                                          print("&&&&&&&&&&&&&&&&LoGO ${homeScreenController.homeUserList.value[index].logo??""}");
+
                                         },
-                                        child: Container(
-                                          width: 64,
-                                          height: 64,
-                                          child: Image.asset(
-                                            homeScreenController.homeUserList
-                                                    .value[index].image ??
-                                                "",
-                                            width: 60,
+                                        child:
+                                        homeScreenController
+                                            .homeUserList.value[index].image!.isNotEmpty ?
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(59),
+                                          child: Image.file(
+                                            File(
+                                                homeScreenController
+                                                    .homeUserList.value[index].image??"",
+                                            ),
                                             height: 60,
+                                            width: 60,
+
+                                            fit: BoxFit.cover,
+                                            alignment: Alignment.topCenter,
                                           ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(90),
-                                          ),
-                                        ),
+                                        ):
+                                        homeScreenController
+                                            .homeUserList.value[index].logo!.isNotEmpty?
+                                         Container(
+                                           width: 60,
+                                           height: 60,
+                                           child: Image.asset(homeScreenController
+                                              .homeUserList.value[index].logo??"",width: 60,height: 60,),
+                                         )  : Container(
+                                           width: 60,
+                                           height: 60,
+                                           child: Image.asset("assets/profile.jpeg",width: 60,height: 60,),
+                                         ),
                                       ),
+
                                       SizedBox(
                                         width: 16,
                                       ),
@@ -218,8 +267,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             height: 10,
                                           ),
                                           Text(
-                                            editScreenController
-                                                    .userList.value[index].title
+                                            homeScreenController
+                                                    .homeUserList.value[index].title
                                                     .toString() ??
                                                 "",
                                             // homeScreenController.userModel.value.title.toString()??"",
@@ -237,8 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Text(
                                               textAlign: TextAlign.start,
                                               maxLines: 2,
-                                              editScreenController
-                                                      .userList.value[index].url
+                                              homeScreenController.homeUserList.value[index].url
                                                       .toString() ??
                                                   "",
                                               // homeScreenController.userModel.value.url.toString()??"",
@@ -284,6 +332,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _scanQR();
+                        editScreenController.title.clear();
+                        editScreenController.category.clear();
+                        editScreenController.image.value = File("");
+
+
+
                         // Get.toNamed(AppRouter.qrScannerPage);
                       },
                       child: Container(

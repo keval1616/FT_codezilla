@@ -1,27 +1,24 @@
+
+
+
 import 'dart:convert';
 import 'dart:io';
-import 'dart:io';
 
-import 'package:codezilla/app_route.dart';
-import 'package:codezilla/common_function/common.dart';
 import 'package:codezilla/model/user_model.dart';
+import 'package:codezilla/pref/app_Prefrance.dart';
 import 'package:codezilla/schema/app_colors.dart';
 import 'package:codezilla/screen/editscan_screen/editscreen_controller.dart';
 import 'package:codezilla/screen/home/homeController.dart';
-import 'package:codezilla/screen/home/homescreen.dart';
-import 'package:codezilla/sevice/user_database_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class EditscanScreen extends StatefulWidget {
-  String? link;
+  // RxString qrcodelink = link.obs;
 
-  EditscanScreen({Key? key, this.link}) : super(key: key);
+  EditscanScreen({Key? key, }) : super(key: key);
   @override
   State<EditscanScreen> createState() => _EditscanScreenState();
 }
@@ -29,57 +26,36 @@ class EditscanScreen extends StatefulWidget {
 class _EditscanScreenState extends State<EditscanScreen> {
   final editScreenController = Get.put(EditScreenController());
   final homeScreenController = Get.find<HomeScreenController>();
-  final UserModel userModel =
-      Get.arguments != null ? Get.arguments[0] : UserModel();
+  String codelink = "";
+  var indexid = Get.arguments[1];
+
 
   get pickedFile => pickedFile;
-
   @override
   void initState() {
+  editScreenController.image.value.path == null;
     // TODO: implement initState
     super.initState();
+     // codelink = Get.arguments[0]??"";
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      print("@@@@@@@@@@@@@@@@@@@@@@@@${Get.arguments[0]}");
+      print("@@@@@@@@@@@@@@@@@@@@@@@@${indexid}");
+
+      UserModel userModel =
+          Get.arguments != null ? Get.arguments[0] : UserModel();
       setState(() {
-        editScreenController.title.text = userModel.title ?? '';
-        widget.link = userModel.url ?? "";
+        editScreenController.title.text = userModel.title!;
+       homeScreenController.cameraScanResult.value = userModel.url ?? "";
         editScreenController.SelectCategories.value = userModel.category ?? "";
-        editScreenController.saveIcon.value = userModel.logo ?? "";
+        editScreenController.saveIcon.value =  userModel.logo ?? "";
         editScreenController.note.text = userModel.note ?? "";
+        editScreenController.image.value = File(userModel.image??"");
       });
     });
   }
 
-  Future getGalleryImage() async {
-    final pickedFile = await editScreenController.picker
-        .pickImage(source: ImageSource.gallery)
-        .then((value) {
-      setState(() {
-        print(value!.path);
-        if (value.path.isNotEmpty) {
-          print("image selected");
-          editScreenController.image = File(value.path);
-        } else {
-          print('No Image Selected');
-        }
-      });
-    });
-  }
 
-  Future getCameraImage() async {
-    final pickedFile = await editScreenController.picker
-        .pickImage(source: ImageSource.camera)
-        .then((value) {
-      setState(() {
-        print(value!.path);
-        if (value.path.isNotEmpty) {
-          print("image selected");
-          editScreenController.image = File(value.path);
-        } else {
-          print('No Image Selected');
-        }
-      });
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -165,13 +141,13 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                     const SizedBox(
                                       height: 7,
                                     ),
-                                    Container(
-                                      width: 300,
+                                     Container(
+                                      width: context.width/1.5,
                                       height: 40,
                                       padding:
                                           const EdgeInsets.only(right: 13.0),
                                       child: Text(
-                                        widget.link ?? "",
+                                       homeScreenController.cameraScanResult.value??"",
                                         textAlign: TextAlign.start,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -230,7 +206,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                               hintText: "Title",
                               prefixIcon: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 15.0, right: 20),
+                                    left: 15.0, right: 20,top: 10),
                                 child: Image.asset(
                                   "assets/editscan/title.png",
                                   width: 17,
@@ -344,7 +320,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    BottomSheetforimage(context);
+                                    showBottomSheetForImage(context);
                                   },
                                   child: Container(
                                     width: 106,
@@ -382,17 +358,6 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                 SizedBox(
                                   width: 20,
                                 ),
-                                Obx(
-                                  () => Container(
-                                    width: 40,
-                                    height: 40,
-                                    child: editScreenController
-                                            .saveIcon.value.isNotEmpty
-                                        ? Image.asset(
-                                            editScreenController.saveIcon.value)
-                                        : Image.asset("assets/profile.jpeg"),
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -404,12 +369,12 @@ class _EditscanScreenState extends State<EditscanScreen> {
                         TextField(
                           controller: editScreenController.note,
                           decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(top: 20),
+                              contentPadding: EdgeInsets.only(top: 12),
                               border: InputBorder.none,
                               hintText: "Note",
                               prefixIcon: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 15.0, right: 20),
+                                    left: 15.0, right: 20,),
                                 child: Image.asset(
                                   "assets/editscan/note.png",
                                   width: 24,
@@ -417,86 +382,83 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                 ),
                               )),
                         ),
+
                         const Divider(
                           thickness: 0.5,
                           color: Colors.grey,
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                // editScreenController.userList.remove(userModel);
+SizedBox(height: 20,),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12.0,right: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
 
-                                editScreenController.storedata();
-                              },
-                              child: Container(
-                                width: 151,
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: AppColor.deletbottoncolor,
+                                },
+                                child: Container(
+                                  width: 148,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: AppColor.deletbottoncolor,
+                                  ),
+                                  child: const Center(
+                                      child: Text(
+                                    "Delete",
+                                    style: TextStyle(
+                                        fontFamily: 'DM Sans',
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  )),
                                 ),
-                                child: const Center(
-                                    child: Text(
-                                  "Delet",
-                                  style: TextStyle(
-                                      fontFamily: 'DM Sans',
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                )),
                               ),
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                editScreenController.userList.value
-                                    .add(UserModel(
-                                  url: widget.link,
-                                  title: editScreenController.title.text,
-                                  category: editScreenController
-                                      .SelectCategories.value,
-                                  note: editScreenController.note.text,
-                                  logo: editScreenController.saveIcon.value,
-                                  image: editScreenController.image?.path ?? '',
-                                ));
-                                editScreenController.storedata();
-                                print(
-                                    "*********************MOODEL****************************${editScreenController.userList.value.first.url}");
-                                // Get.toNamed(AppRouter.homeScreen,arguments: [
-                                //   widget.link,editScreenController.title.text, editScreenController.SelectCategories.value , editScreenController.note.text, editScreenController.saveIcon.value
-                                // ]);
-                                // storedata();
-                                Get.back();
-                              },
-                              child: Container(
-                                width: 151,
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Colors.blueAccent,
+                              Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  editScreenController.userList.value
+                                      .add(UserModel(
+                                    url: homeScreenController.cameraScanResult.value??"",
+                                    title: editScreenController.title.text,
+                                    category: editScreenController
+                                        .SelectCategories.value,
+                                    note: editScreenController.note.text,
+                                    logo: editScreenController.saveIcon.value,
+                                    image: editScreenController.image.value.path??"",
+                                  ));
+                                  editScreenController.storedata();
+                                  print(
+                                      "*********************MOODEL****************************${editScreenController.userList.value.first.url}");
+                                  // Get.toNamed(AppRouter.homeScreen,arguments: [
+                                  //   widget.link,editScreenController.title.text, editScreenController.SelectCategories.value , editScreenController.note.text, editScreenController.saveIcon.value
+                                  // ]);
+                                  // storedata();
+                                  Get.back();
+
+                                },
+                                child: Container(
+                                  width: 148,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Colors.blueAccent,
+                                  ),
+                                  child: const Center(
+                                      child: Text(
+                                    "Save",
+                                    style: TextStyle(
+                                        fontFamily: 'MS Sans',
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  )),
                                 ),
-                                child: const Center(
-                                    child: Text(
-                                  "Save",
-                                  style: TextStyle(
-                                      fontFamily: 'MS Sans',
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                )),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                          ],
+
+                            ],
+                          ),
                         ),
                         const SizedBox(
                           height: 20,
@@ -558,7 +520,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                             GestureDetector(
                               onTap: () {
                                 editScreenController.SelectCategories.value =
-                                    homeScreenController.categories.value
+                                    homeScreenController.categories
                                         .elementAt(editScreenController
                                             .selectCategory.value);
                                 print(
@@ -587,7 +549,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                             ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: homeScreenController
-                                    .categories.value.length,
+                                    .categories.length,
                                 physics: const BouncingScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 itemBuilder: (context, index) {
@@ -651,7 +613,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                                       Text(
                                                         homeScreenController
                                                             .categories
-                                                            .value[index],
+                                                            [index],
                                                         style: const TextStyle(
                                                             color:
                                                                 Colors.black87,
@@ -719,21 +681,31 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                           ),
                                           GestureDetector(
                                               onTap: () {
+                                                if (kDebugMode) {
+                                                  print("=========================================================ok");
+                                                }
                                                 homeScreenController
-                                                    .categories.value
+                                                    .categories
                                                     .add(editScreenController
                                                         .newCategoryController
                                                         .text);
+
+
+                                                AppPref().catList =  json.encode(homeScreenController
+                                                    .categories);
+
                                                 FocusManager
                                                     .instance.primaryFocus
                                                     ?.unfocus();
                                                 editScreenController
                                                     .addCategory.value = false;
-                                                homeScreenController.categories
-                                                    .refresh();
+                                                // homeScreenController.categories
+                                                //     .refresh();
                                                 editScreenController
                                                     .newCategoryController
                                                     .clear();
+
+
                                               },
                                               child: Text(
                                                 "Save",
@@ -916,161 +888,90 @@ class _EditscanScreenState extends State<EditscanScreen> {
     );
   }
 
-  void BottomSheetforimage(BuildContext context) {
-    showModalBottomSheet<void>(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
-        ),
+
+  Future<dynamic> showBottomSheetForImage(BuildContext context) {
+    return showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
       ),
       context: context,
-      builder: (BuildContext context) {
-        return Container(
-            height: 300,
-            decoration: const BoxDecoration(
+      backgroundColor: AppColor.lightYellow,
+      builder: (context) =>
+          Container(
+            decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
+            padding: const EdgeInsets.all(15),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Row(
-                    children: [
-                      const Text(
-                        "Image",
-                        style: TextStyle(
-                            fontFamily: 'MS Sans',
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                          print(
-                              "***********IMage***********${editScreenController.image.toString()}");
-                          print(
-                              "***********IMage***********${editScreenController.image!}");
-                          editScreenController.Selectimage.value =
-                              editScreenController.image.toString();
-                        },
-                        child: const Text(
-                          "Done",
-                          style: TextStyle(
-                              fontFamily: 'MS Sans',
-                              color: Colors.blueAccent,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
+                Text(
+                  "Select Source",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 25,
                 ),
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                            itemCount: 1,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(left: 30.0),
-                                child: Row(
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            await getCameraImage();
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Image.asset(
-                                                "assets/image/camera.png",
-                                                width: 35,
-                                                height: 35,
-                                              ),
-                                              const SizedBox(
-                                                width: 15,
-                                              ),
-                                              const Text(
-                                                "Camera",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            await getGalleryImage();
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Image.asset(
-                                                "assets/image/gallery.png",
-                                                width: 35,
-                                                height: 35,
-                                              ),
-                                              const SizedBox(
-                                                width: 15,
-                                              ),
-                                              const Text(
-                                                "Gallery",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 50,
-                                    ),
-                                    ClipOval(
-                                      child: editScreenController.image != null
-                                          ? Image.file(
-                                              editScreenController.image!,
-                                              height: 60,
-                                              width: 60,
-                                              fit: BoxFit.fill)
-                                          : Image.asset(
-                                              "assets/home/profile.png",
-                                              width: 60.0,
-                                              height: 60.0,
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            })),
+                    GestureDetector(
+                      onTap: () async {
+                        await editScreenController
+                            .getImage(ImageSource.camera);
+                        Get.back();
+                      },
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.bgColor),
+                          borderRadius: BorderRadius.circular(6),
+
+                        ),
+                        child: Icon(Icons.camera_alt),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        await editScreenController
+                            .getImage(ImageSource.gallery);
+                        Get.back();
+                      },
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.bgColor),
+                          borderRadius: BorderRadius.circular(6),
+
+                        ),
+                        child: Icon(Icons.photo),
+                      ),
+                    ),
                   ],
                 ),
+                const SizedBox(
+                  height: 25,
+                ),
+
+                const SizedBox(
+                  height: 8,
+                ),
               ],
-            ));
-      },
+            ),
+          ),
     );
   }
-
   _launchURL() async {
-    var url = widget.link.toString();
+    var url = homeScreenController.cameraScanResult.value.toString();
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);

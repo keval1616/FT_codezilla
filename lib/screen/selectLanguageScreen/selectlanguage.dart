@@ -1,5 +1,6 @@
 import 'package:codezilla/app_route.dart';
 import 'package:codezilla/schema/app_colors.dart';
+import 'package:codezilla/screen/home/homeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +12,14 @@ class SelectLanguageScreen extends StatefulWidget {
 }
 
 class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
+
+  final  home = Get.find<HomeScreenController>();
+@override
+  void initState() {
+  home.getData();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,18 +27,18 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: 100,
-          ),
-          Image.asset("assets/home/homescreen.png"),
-          SizedBox(
             height: 60,
+          ),
+          Image.asset("assets/home/homescreen.png",),
+          SizedBox(
+            height: 40,
           ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
 
         child: Container(
-          height: 330,
+          height: 320,
           width: double.maxFinite, //set your width here
           decoration: BoxDecoration(
             color: AppColor.conrainer,

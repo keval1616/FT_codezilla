@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:codezilla/app_route.dart';
 import 'package:codezilla/pref/app_Prefrance.dart';
+import 'package:codezilla/screen/home/homeController.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +16,10 @@ import 'utils/data_connection_checker.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await AppPref().isPreferenceReady;
+  await AppPref().isPreferenceReady;
 
+ Get.put(HomeScreenController());
+  // home.getData();
   runApp(const MyApp());
 
 
