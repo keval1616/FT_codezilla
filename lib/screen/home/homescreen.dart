@@ -5,6 +5,7 @@ import 'package:codezilla/schema/app_colors.dart';
 import 'package:codezilla/screen/editscan_screen/editscanscreen.dart';
 import 'package:codezilla/screen/editscan_screen/editscreen_controller.dart';
 import 'package:codezilla/screen/home/homeController.dart';
+import 'package:codezilla/utils/enum/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -41,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
     var camerastatus = await Permission.camera.status;
     if (camerastatus.isGranted) {
       homeScreenController.cameraScanResult.value = (await scanner.scan())!;
-      Get.toNamed(AppRouter.editscanScreen,);
+      Get.toNamed(
+        AppRouter.editscanScreen,arguments: ["","",EnumForButton.addScreen]
+      );
 
       // Navigator.of(context).push(MaterialPageRoute(
       //     builder: (context) => EditscanScreen(link: cameraScanResult)));
@@ -49,13 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
       var isGrant = await Permission.camera.request();
       if (isGrant.isGranted) {
         homeScreenController.cameraScanResult.value = (await scanner.scan())!;
-
       }
     }
   }
 
-
-  getDataByCategory(int index){
+  getDataByCategory(int index) {
     // homeScreenController.homeUserList.value =
     //     editScreenController.userList
     //         .where((p0) =>
@@ -66,31 +67,28 @@ class _HomeScreenState extends State<HomeScreen> {
     // print(homeScreenController.homeUserList.value );
 
     homeScreenController.homeUserList.clear();
-    if(index==0){
+    if (index == 0) {
       homeScreenController.homeUserList.addAll(editScreenController.userList);
       homeScreenController.homeUserList.refresh();
-    }else{
-
+    } else {
       homeScreenController.homeUserList.clear();
-      for(int i=0;i<editScreenController.userList.length;i++){
-
+      for (int i = 0; i < editScreenController.userList.length; i++) {
         // print(editScreenController.userList[i].category);
         // print((homeScreenController.categories[j]));
-        if(editScreenController.userList[i].category==homeScreenController.categories[index]){
+        if (editScreenController.userList[i].category ==
+            homeScreenController.categories[index]) {
           print("here");
-          homeScreenController.homeUserList.add(editScreenController.userList[i]);
-          print( "==============>   ${homeScreenController.homeUserList}");
+          homeScreenController.homeUserList
+              .add(editScreenController.userList[i]);
+          print("==============>   ${homeScreenController.homeUserList}");
         }
-
       }
       homeScreenController.homeUserList.refresh();
-
     }
-
   }
+
   @override
   Widget build(BuildContext context) {
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -140,8 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Container(
               height: 50,
-              child: Obx(()=>
-                ListView.builder(
+              child: Obx(
+                () => ListView.builder(
                   shrinkWrap: true,
                   itemCount: homeScreenController.categories.length,
                   physics: BouncingScrollPhysics(),
@@ -164,14 +162,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text(
                               homeScreenController.categories[index],
                               style: TextStyle(
-                                fontFamily: 'MS Sans',
-                                fontSize: 14,
-                                color: homeScreenController.selectCategory.value == index ? Colors.white : Colors.black
-                              ),
+                                  fontFamily: 'MS Sans',
+                                  fontSize: 14,
+                                  color: homeScreenController
+                                              .selectCategory.value ==
+                                          index
+                                      ? Colors.white
+                                      : Colors.black),
                             ),
                           )),
                           decoration: BoxDecoration(
-                            color: homeScreenController.selectCategory.value == index ? Colors.blueAccent : Colors.white,
+                            color: homeScreenController.selectCategory.value ==
+                                    index
+                                ? Colors.blueAccent
+                                : Colors.white,
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -205,9 +209,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     arguments: [
                                       homeScreenController
                                           .homeUserList.value[index],
-                                      isupdate = true
-                                    ]);
-
+                                           index,
+                                      EnumForButton.homescreen
+                                    ]
+                                );
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -222,40 +227,57 @@ class _HomeScreenState extends State<HomeScreen> {
                                         onTap: () {
                                           print(
                                               "*********************IMAGE#################${homeScreenController.homeUserList.value[index].image}");
-                                          print("&&&&&&&&&&&&&&&&LoGO ${homeScreenController.homeUserList.value[index].logo??""}");
-
+                                          print(
+                                              "&&&&&&&&&&&&&&&&LoGO ${homeScreenController.homeUserList.value[index].logo ?? ""}");
                                         },
-                                        child:
-                                        homeScreenController
-                                            .homeUserList.value[index].image!.isNotEmpty ?
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(59),
-                                          child: Image.file(
-                                            File(
-                                                homeScreenController
-                                                    .homeUserList.value[index].image??"",
-                                            ),
-                                            height: 60,
-                                            width: 60,
-
-                                            fit: BoxFit.cover,
-                                            alignment: Alignment.topCenter,
-                                          ),
-                                        ):
-                                        homeScreenController
-                                            .homeUserList.value[index].logo!.isNotEmpty?
-                                         Container(
-                                           width: 60,
-                                           height: 60,
-                                           child: Image.asset(homeScreenController
-                                              .homeUserList.value[index].logo??"",width: 60,height: 60,),
-                                         )  : Container(
-                                           width: 60,
-                                           height: 60,
-                                           child: Image.asset("assets/profile.jpeg",width: 60,height: 60,),
-                                         ),
+                                        child: homeScreenController.homeUserList
+                                                .value[index].image!.isNotEmpty
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(59),
+                                                child: Image.file(
+                                                  File(
+                                                    homeScreenController
+                                                            .homeUserList
+                                                            .value[index]
+                                                            .image ??
+                                                        "",
+                                                  ),
+                                                  height: 60,
+                                                  width: 60,
+                                                  fit: BoxFit.cover,
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                ),
+                                              )
+                                            : homeScreenController
+                                                    .homeUserList
+                                                    .value[index]
+                                                    .logo!
+                                                    .isNotEmpty
+                                                ? Container(
+                                                    width: 60,
+                                                    height: 60,
+                                                    child: Image.asset(
+                                                      homeScreenController
+                                                              .homeUserList
+                                                              .value[index]
+                                                              .logo ??
+                                                          "",
+                                                      width: 60,
+                                                      height: 60,
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    width: 60,
+                                                    height: 60,
+                                                    child: Image.asset(
+                                                      "assets/profile.jpeg",
+                                                      width: 60,
+                                                      height: 60,
+                                                    ),
+                                                  ),
                                       ),
-
                                       SizedBox(
                                         width: 16,
                                       ),
@@ -267,8 +289,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             height: 10,
                                           ),
                                           Text(
-                                            homeScreenController
-                                                    .homeUserList.value[index].title
+                                            homeScreenController.homeUserList
+                                                    .value[index].title
                                                     .toString() ??
                                                 "",
                                             // homeScreenController.userModel.value.title.toString()??"",
@@ -286,7 +308,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Text(
                                               textAlign: TextAlign.start,
                                               maxLines: 2,
-                                              homeScreenController.homeUserList.value[index].url
+                                              homeScreenController.homeUserList
+                                                      .value[index].url
                                                       .toString() ??
                                                   "",
                                               // homeScreenController.userModel.value.url.toString()??"",
@@ -335,8 +358,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         editScreenController.title.clear();
                         editScreenController.category.clear();
                         editScreenController.image.value = File("");
-
-
 
                         // Get.toNamed(AppRouter.qrScannerPage);
                       },

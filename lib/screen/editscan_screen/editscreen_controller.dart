@@ -94,7 +94,6 @@ class EditScreenController extends GetxController {
     final pickedFile = await picker.pickImage(source: source);
     if (pickedFile != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
-
         sourcePath: pickedFile.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -119,6 +118,7 @@ class EditScreenController extends GetxController {
       image.value = File(croppedFile!.path);
     }
   }
+
   Widget pickImage() {
     if (image.value.path.isNotEmpty) {
       return ClipRRect(
@@ -127,7 +127,6 @@ class EditScreenController extends GetxController {
           image.value,
           height: 105,
           width: 105,
-
           fit: BoxFit.cover,
           alignment: Alignment.topCenter,
         ),
@@ -135,15 +134,13 @@ class EditScreenController extends GetxController {
     } else {
       return ClipRRect(
           borderRadius: BorderRadius.circular(59),
-          child: Image.asset(
-              saveIcon.value)
-        // Image.network(
-        //   "https://i.postimg.cc/YCVXmmHt/image-3.png",
-        //   height: 105,
-        //   width: 105,
-        // ),
-      );
+          child: Image.asset(saveIcon.value)
+          // Image.network(
+          //   "https://i.postimg.cc/YCVXmmHt/image-3.png",
+          //   height: 105,
+          //   width: 105,
+          // ),
+          );
     }
   }
-
 }

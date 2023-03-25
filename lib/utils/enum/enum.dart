@@ -1,0 +1,1 @@
+  enum EnumForButton { homescreen,addScreen }
