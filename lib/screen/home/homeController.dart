@@ -2,12 +2,17 @@ import 'dart:convert';
 
 import 'package:codezilla/app_route.dart';
 import 'package:codezilla/model/user_model.dart';
+import 'package:codezilla/model/userdatamodel.dart';
 import 'package:codezilla/pref/app_Prefrance.dart';
 import 'package:codezilla/screen/editscan_screen/editscreen_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreenController extends GetxController {
+  DataModel dataModel = DataModel();
+
   RxInt selectCategory = 0.obs;
   RxList categories =  [
     // "#All".tr,
@@ -17,6 +22,7 @@ class HomeScreenController extends GetxController {
     // "#class".tr
   ].obs;
   RxList<UserModel> homeUserList = <UserModel>[].obs;
+  RxList<DataModel> dataModelList = <DataModel>[].obs;
   RxString  cameraScanResult = "".obs;
 
   late SharedPreferences sharedPreferences;
@@ -38,4 +44,7 @@ class HomeScreenController extends GetxController {
     }
 
   }
-} 
+
+
+
+}

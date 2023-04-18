@@ -36,6 +36,7 @@ class UserModel {
         'logo': logo,
         'image': image
       };
+
 }
 
 

@@ -5,6 +5,7 @@ import 'package:codezilla/app_route.dart';
 import 'package:codezilla/pref/app_Prefrance.dart';
 import 'package:codezilla/screen/home/homeController.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -12,17 +13,16 @@ import 'package:get/get.dart';
 import 'service/localization_service.dart';
 import 'utils/data_connection_checker.dart';
 
-
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   await AppPref().isPreferenceReady;
 
- Get.put(HomeScreenController());
+  Get.put(HomeScreenController());
   // home.getData();
   runApp(const MyApp());
-
-
 }
 
 class MyApp extends StatefulWidget {
@@ -53,11 +53,12 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance.removeObserver;
     super.dispose();
   }
+
   bool isInternetAvailable = false;
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: AppRouter.selectLanguageScreen,
+      initialRoute: AppRouter.splashScreen,
       getPages: AppRouter.getPages,
       translations: Messages(),
       locale: Locale('en_US'),
@@ -71,7 +72,6 @@ class _MyAppState extends State<MyApp> {
       // translations: LocalizationService(),
     );
   }
-
 
   _internetAvailability() async {
     _streams.add(Connectivity()
@@ -92,33 +92,30 @@ class _MyAppState extends State<MyApp> {
       print(isInternetAvailable);
     }
   }
-
 }
+
 class Messages extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
-    'en': {
-      'hello': 'Hello World',
-      "CodeZilla Wallet": "CodeZilla Wallet",
-      "CAMERA SCAN":"CAMERA SCAN",
-      "#All":"#All",
-      "#Restorent":"#Restorent",
-      "#Websites": "#Websites",
-      "#Buisness Center":"#Buisness Center",
-      "#class" : "#class"
-
-
-    },
-    'ar_SA': {
-      "#All": "#الجميع",
-      'hello': 'مرحبًا',
-      "CodeZilla Wallet" :'كودزيلا والت ',
-      "CAMERA SCAN":"مسح الكاميرا",
-      "#Restorent":"#مصلح",
-      "#Websites" : "المواقع",
-      "#Buisness Center":"مركز الأعمال ",
-      "#class" : "فصل"
-
-    }
-  };
+        'en': {
+          'hello': 'Hello World',
+          "CodeZilla Wallet": "CodeZilla Wallet",
+          "CAMERA SCAN": "CAMERA SCAN",
+          "#All": "#All",
+          "#Restorent": "#Restorent",
+          "#Websites": "#Websites",
+          "#Buisness Center": "#Buisness Center",
+          "#class": "#class"
+        },
+        'ar_SA': {
+          "#All": "#الجميع",
+          'hello': 'مرحبًا',
+          "CodeZilla Wallet": 'كودزيلا والت ',
+          "CAMERA SCAN": "مسح الكاميرا",
+          "#Restorent": "#مصلح",
+          "#Websites": "المواقع",
+          "#Buisness Center": "مركز الأعمال ",
+          "#class": "فصل"
+        }
+      };
 }

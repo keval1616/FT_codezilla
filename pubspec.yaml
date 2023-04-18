@@ -50,6 +50,20 @@ dependencies:
   url_launcher: ^6.1.9
   google_fonts: ^4.0.3
   image_cropper: ^3.0.1
+#  google_sign_in: ^6.0.2
+#  googleapis: ^10.1.0
+#  googleapis_auth: ^1.4.0
+#  flutter_secure_storage: ^8.0.0
+  file_picker: ^5.2.6
+  firebase_auth: ^4.3.0
+  firebase_database: ^10.1.0
+  cloud_firestore: ^4.5.0
+  once: ^1.5.1
+
+  path_provider: ^2.0.14
+  http: ^0.13.5
+  firebase_core: ^2.9.0
+
 
 
 

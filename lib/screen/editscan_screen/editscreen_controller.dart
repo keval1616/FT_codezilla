@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codezilla/model/user_model.dart';
+import 'package:codezilla/model/userdatamodel.dart';
 import 'package:codezilla/screen/home/homeController.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -53,22 +57,22 @@ class EditScreenController extends GetxController {
   late SharedPreferences sharedPreferences;
   final HomeScreenController _homeScreenController =
       Get.find<HomeScreenController>();
-  Future initalGetSavedData() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    final jsondetails = jsonDecode(sharedPreferences.getString('userdata')!);
-    userList.value.clear();
-    _homeScreenController.homeUserList.clear();
-    for (int i = 0; i < jsondetails.length; i++) {
-      userList.add(UserModel.fromJson(jsondetails[i]));
-      _homeScreenController.homeUserList
-          .add(UserModel.fromJson(jsondetails[i]));
-    }
-    // Records userModel = Records.fromJson(jsondetails);
-    // UserModel userModel = UserModel.fromJson(jsondetails);
-    userList.forEach((element) {
-      print("*******kk***********${element.title}");
-    });
-  }
+  // Future initalGetSavedData() async {
+  //   sharedPreferences = await SharedPreferences.getInstance();
+  //   final jsondetails = jsonDecode(sharedPreferences.getString('userdata')!);
+  //   userList.value.clear();
+  //   _homeScreenController.homeUserList.clear();
+  //   for (int i = 0; i < jsondetails.length; i++) {
+  //     userList.add(UserModel.fromJson(jsondetails[i]));
+  //     _homeScreenController.homeUserList
+  //         .add(UserModel.fromJson(jsondetails[i]));
+  //   }
+  //   // Records userModel = Records.fromJson(jsondetails);
+  //   // UserModel userModel = UserModel.fromJson(jsondetails);
+  //   userList.forEach((element) {
+  //     print("*******kk***********${element.title}");
+  //   });
+  // }
 
   Future storedata() async {
     print(userList.toJson().toList());
@@ -85,7 +89,7 @@ class EditScreenController extends GetxController {
     });
     String userdata = jsonEncode(tempUserData);
     await sharedPreferences.setString('userdata', userdata);
-    await initalGetSavedData();
+    // await initalGetSavedData();
 
     // AppPrefef().chat = jsonEncode(tempChat);
   }
@@ -116,31 +120,55 @@ class EditScreenController extends GetxController {
         ],
       );
       image.value = File(croppedFile!.path);
+
     }
   }
 
   Widget pickImage() {
     if (image.value.path.isNotEmpty) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(59),
-        child: Image.file(
-          image.value,
-          height: 105,
-          width: 105,
-          fit: BoxFit.cover,
-          alignment: Alignment.topCenter,
+      return Obx(()=>
+        ClipRRect(
+          borderRadius: BorderRadius.circular(59),
+          child: Image.file(
+            image.value,
+            height: 50,
+            width: 50,
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
+          ),
         ),
       );
-    } else {
-      return ClipRRect(
-          borderRadius: BorderRadius.circular(59),
-          child: Image.asset(saveIcon.value)
-          // Image.network(
-          //   "https://i.postimg.cc/YCVXmmHt/image-3.png",
-          //   height: 105,
-          //   width: 105,
-          // ),
-          );
+    }   else {
+      return Obx(()=>
+         ClipRRect(
+            borderRadius: BorderRadius.circular(59),
+            child: Image.asset(saveIcon.value)
+            // Image.network(
+            //   "https://i.postimg.cc/YCVXmmHt/image-3.png",
+            //   height: 105,
+            //   width: 105,
+            // ),
+            ),
+      );
     }
   }
+
+  //   final List<DataModel> list = [];
+  // List<DataModel> needs = [];
+  //   getUsers() async {
+  //     final snapshot =  await   FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection('qrs').get();
+  //
+  //     Map<dynamic, dynamic> values = Snapshot.value;
+  //     values.forEach((key, values) {
+  //       needs.add(Need.fromSnapshot(values));
+  //     });
+  //
+  //     map.forEach((key, value) {
+  //       final dataModel = DataModel.fromJson(value);
+  //
+  //       list.add(dataModel);
+  //       print("==============++++++++====================${dataModel}");
+  //     });
+  //   }
+
 }
