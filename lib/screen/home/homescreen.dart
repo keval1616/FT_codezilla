@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codezilla/app_route.dart';
+import 'package:codezilla/firebase_helper.dart';
 import 'package:codezilla/model/categorymodel.dart';
 import 'package:codezilla/model/user_model.dart';
 import 'package:codezilla/schema/app_colors.dart';
@@ -568,67 +569,34 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
   void getUsers() async {
     users = await firebaseService.getUsers();
     print("this is sssss=========${users}");
+    Map<String, List<Map<String, dynamic>>> sortedData = sortData(users);
 
+    print(users);
     categorys = await firebaseService.getCategory();
     setState(() {});
   }
 }
 
-class FirebaseService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+Map<String, List<Map<String, dynamic>>> sortData(List<Map<String, dynamic>> data) {
+  Map<String, List<Map<String, dynamic>>> sortedMap =<String, List<Map<String, dynamic>>>{};;
 
-  Future<List<UserModel>> getUsers() async {
-    List<UserModel> users = [];
+  for (var item in data) {
+    String category = item['category'];
 
-    QuerySnapshot querySnapshot = await _db
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('qrs')
-        .get();
-    // retrieve all documents from the 'users' collection
-
-    querySnapshot.docs.forEach((doc) {
-      users.add(UserModel(
-          title: doc['title'],
-          note: doc['note'],
-          logo: doc['logo'],
-          image: doc['image'],
-          category: doc['category'],
-          url: doc['url']));
-    });
-
-    // Map map = {
-    //
-    // };
-    // querySnapshot.docs.forEach((element) {
-    //   map[element['category']] = {
-    //    print("ehduiheduinje"),
-    //   };
-    //
-    // });
-    //
-    // print("ok");
-    // print(map);
-    return users;
+    if (sortedMap.containsKey(category)) {
+      sortedMap[category]!.add(item);
+    } else {
+      sortedMap[category] = [item];
+    }
   }
 
-  Future<List<CategoryModel>> getCategory() async {
-    List<CategoryModel> categorys = [];
+  sortedMap.forEach((key, value) {
+    value.sort((a, b) => a['name'].compareTo(b['name']));
+  });
 
-    QuerySnapshot querySnapshot = await _db
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('category')
-        .get();
-    // retrieve all documents from the 'users' collection
-
-    querySnapshot.docs.forEach((doc) {
-      categorys.add(CategoryModel(category: doc['category']));
-    });
-
-    return categorys;
-  }
+  return sortedMap;
 }
