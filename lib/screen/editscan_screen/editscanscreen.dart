@@ -21,13 +21,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class EditscanScreen extends StatefulWidget {
   // RxString qrcodelink = link.obs;
 // String? title;
-   UserModel? userModel;
+  UserModel? userModel;
+
 //   DataModel? dataModel;
 //   int? removeMap;
-
-
-  EditscanScreen({Key? key,this.userModel})
-      : super(key: key);
+  EnumForButton? enumForButton;
+  EditscanScreen({Key? key, this.userModel,this.enumForButton}) : super(key: key);
 
   @override
   State<EditscanScreen> createState() => _EditscanScreenState();
@@ -53,28 +52,24 @@ class _EditscanScreenState extends State<EditscanScreen> {
     // editScreenController.image.value.path == null;
     // TODO: implement initState
     super.initState();
-    print("------argumrnt----${widget.userModel?.title}");
+    // print("------argumrnt----${widget.userModel?.title}");
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // if (Get.arguments['enumForButton'] == EnumForButton.homescreen) {
-        // editScreenController.selectCategory.value = getcategories();
+
+
+      if(widget.enumForButton==EnumForButton.homescreen){
+        editScreenController.SelectCategoriesModel.value.category = widget.userModel?.category??"";
         editScreenController.title.text = widget.userModel?.title??"";
         editScreenController.note.text = widget.userModel?.note??"";
-        editScreenController.SelectCategories.value =
-            Get.arguments['cetegory']?? "";
+        editScreenController.SelectCategories.value =widget.userModel?.category??"";
         homeScreenController
             .cameraScanResult.value = widget.userModel?.url??"";
         editScreenController
-            .image.value = File("${Get.arguments['image']??""}");
-        editScreenController.saveIcon.value = "${Get.arguments['logo']??""}";
+            .image.value = File("${widget.userModel?.image??""}");
+        editScreenController.saveIcon.value = "${widget.userModel?.logo??""}";
+      }
 
-      // }
     });
-
   }
-
-
-
-
 
   // final UserModel argument = Get.arguments[0];
 
@@ -103,9 +98,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
               )),
           title: Transform(
             transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
-            child:
-
-            Text(
+            child: Text(
               // Get.arguments["enumForButton"]==EnumForButton.homescreen?
               // "Edit scan":
               "Add Scan",
@@ -255,10 +248,9 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                 ),
                                 Container(
                                   child: editScreenController
-                                          .SelectCategories.value.isNotEmpty
-                                      ? Text(editScreenController
-                                          .SelectCategories.value)
-                                      : Text("Category"),
+                                          .SelectCategories.value.isEmpty
+                                      ? Text(editScreenController.SelectCategoriesModel.value.category??"")
+                                      : Text("jkj"),
                                 ),
                               ],
                             ),
@@ -362,9 +354,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                     const SizedBox(
                                       width: 5,
                                     ),
-
                                     const Text("Add Image"),
-
                                   ],
                                 ),
                               ),
@@ -406,8 +396,6 @@ class _EditscanScreenState extends State<EditscanScreen> {
                     SizedBox(
                       height: 20,
                     ),
-
-
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0, right: 12),
                       child: Row(
@@ -415,7 +403,6 @@ class _EditscanScreenState extends State<EditscanScreen> {
                           children: [
                             // if(Get.arguments["enumForButton"]==EnumForButton.homescreen)
                             GestureDetector(
-
                               onTap: () {
                                 // editScreenController.userList
                                 //     .removeAt(widget.removeMap!);
@@ -454,7 +441,7 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                   //   url: homeScreenController.cameraScanResult.value ??"",
                                   //   title: editScreenController.title.text,
                                   //   category: editScreenController.SelectCategories.value,
-                                   
+
                                   //   logo: editScreenController.saveIcon.value,
                                   //   image:
                                   //       editScreenController.image.value.path ??
@@ -469,17 +456,25 @@ class _EditscanScreenState extends State<EditscanScreen> {
 
                                   // dbRef.push().set(users);
 
-                                    var note = editScreenController.note.text.trim();
-                                    var title =  editScreenController.title.text.trim();
-                                    var logo= editScreenController.saveIcon.value??"";
-                                    var image = editScreenController.image.value.path ??"";
-                                  var category = editScreenController.SelectCategories.value;
-                                  var url = homeScreenController.cameraScanResult.value ??"";
-;                                    addItem(title,note,category,logo,image,url);
-Get.toNamed(AppRouter.homeScreen);
+                                  var note =
+                                      editScreenController.note.text.trim();
+                                  var title =
+                                      editScreenController.title.text.trim();
+                                  var logo =
+                                      editScreenController.saveIcon.value ?? "";
+                                  var image =
+                                      editScreenController.image.value.path ??
+                                          "";
+                                  var category = editScreenController.SelectCategoriesModel.value.category??"";
+                                  var url = homeScreenController
+                                          .cameraScanResult.value ??
+                                      "";
+                                  ;
+                                  addItem(
+                                      title, note, category, logo, image, url);
+                                  Get.toNamed(AppRouter.homeScreen);
 
-
-                                      // "*********************MOODEL****************************${editScreenController.userList.value.first.url}");
+                                  // "*********************MOODEL****************************${editScreenController.userList.value.first.url}");
                                   // Get.toNamed(AppRouter.homeScreen,arguments: [
                                   //   widget.link,editScreenController.title.text, editScreenController.SelectCategories.value , editScreenController.note.text, editScreenController.saveIcon.value
                                   // ]);
@@ -567,7 +562,6 @@ Get.toNamed(AppRouter.homeScreen);
                             //     ))
                           ]),
                     ),
-
                     const SizedBox(
                       height: 20,
                     ),
@@ -597,290 +591,277 @@ Get.toNamed(AppRouter.homeScreen);
       context: context,
       builder: (BuildContext context) {
         return Obx(
-          () => Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Container(
-
-                decoration: const BoxDecoration(
-
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            "Category",
-                            style: TextStyle(
-                                fontFamily: 'MS Sans',
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-
-                              editScreenController.SelectCategories.value =
-                                  homeScreenController.categories.elementAt(
-                                      editScreenController
-                                          .selectCategory.value);
-                              var selectcategory = editScreenController.SelectCategories.value;
-                              AddCategory(selectcategory);
-                              print(
-                                  "=========category+++++++++++${editScreenController.SelectCategories.value}");
-                              Navigator.pop(context);
-                            },
-                            child: const Text(
-                              "Done",
+            ()=> Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "Category",
                               style: TextStyle(
                                   fontFamily: 'MS Sans',
-                                  color: Colors.blueAccent,
+                                  color: Colors.black87,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 200,
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount:
-                                  homeScreenController.categories.length,
-                              physics: const BouncingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Obx(
-                                    () => Container(
-
-                                      child: Center(
-                                          child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                editScreenController
-                                                    .selectCategory
-                                                    .value = index;
-                                              });
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      width: 25,
-                                                      height: 25,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      80),
-                                                          border: Border.all(
-                                                              width: 1)),
-                                                      child: Obx(
-                                                        () => Container(
-                                                          width: 10,
-                                                          height: 10,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          80),
-                                                              color: editScreenController
-                                                                          .selectCategory
-                                                                          .value ==
-                                                                      index
-                                                                  ? Colors
-                                                                      .blueAccent
-                                                                  : Colors
-                                                                      .white,
-                                                              border: Border.all(
-                                                                  width: 1,
-                                                                  color: Colors
-                                                                      .white)),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 20,
-                                                    ),
-                                                    Text(
-                                                      homeScreenController
-                                                          .categories[index],
-                                                      style: const TextStyle(
-                                                          color:
-                                                              Colors.black87,
-                                                          fontSize: 15),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-                                      decoration: BoxDecoration(
-
-                                        borderRadius:
-                                            BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                        Obx(
-                          () => Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: editScreenController.addCategory.value ==
-                                    true
-                                ? Row(
-                                    children: [
-                                      Container(
-                                        width: 25,
-                                        height: 25,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(80),
-                                            border: Border.all(width: 1)),
-                                      ),
-                                      SizedBox(
-                                        width: 12,
-                                      ),
-                                      Container(
-                                        width: 200,
-                                        height: 35,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                        child: TextField(
-                                          controller: editScreenController
-                                              .newCategoryController,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide.none,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      10.0),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors
-                                                .black12, //<-- SEE HERE
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 12,
-                                      ),
-                                      GestureDetector(
-                                          onTap: () {
-                                            if (kDebugMode) {
-                                              print(
-                                                  "=========================================================ok");
-                                            }
-                                            homeScreenController.categories
-                                                .add(editScreenController
-                                                    .newCategoryController
-                                                    .text);
-
-
-                                            AppPref().catList = json.encode(
-                                                homeScreenController
-                                                    .categories);
-
-                                            FocusManager
-                                                .instance.primaryFocus
-                                                ?.unfocus();
-                                            editScreenController
-                                                .addCategory.value = false;
-                                            // homeScreenController.categories
-                                            //     .refresh();
-                                            editScreenController
-                                                .newCategoryController
-                                                .clear();
-                                          },
-                                          child: Text(
-                                            "Update",
-                                            style: TextStyle(
-                                                color: Colors.blueAccent,
-                                                fontSize: 16,
-                                                fontWeight:
-                                                    FontWeight.bold),
-                                          ))
-                                    ],
-                                  )
-                                : Container(),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 10, bottom: 50),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: GestureDetector(
+                            const Spacer(),
+                            GestureDetector(
                               onTap: () {
-                                setState(() {});
-                                editScreenController.addCategory.value =
-                                    true;
+                                editScreenController.SelectCategoriesModel.value =
+                                    homeScreenController.categoryList.elementAt(editScreenController.selectCategory.value);
+                                print( editScreenController.SelectCategoriesModel.value.category);
+
+                                // var selectcategory =
+                                //     editScreenController.SelectCategories.value;
+                                // AddCategory(selectcategory);
+
+                                Navigator.pop(context);
                               },
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 25,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      color: Colors.blueAccent,
-                                      borderRadius:
-                                          BorderRadius.circular(90),
-                                    ),
-                                    child: const Center(
-                                        child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 20,
-                                    )),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  const Text(
-                                    "Add a new category",
-                                    style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 15),
-                                  ),
-                                ],
+                              child: const Text(
+                                "Done",
+                                style: TextStyle(
+                                    fontFamily: 'MS Sans',
+                                    color: Colors.blueAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 200,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: homeScreenController.categoryList.length,
+                                physics: const BouncingScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Obx(
+                                      () => Container(
+                                        child: Center(
+                                            child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  editScreenController
+                                                      .selectCategory
+                                                      .value = index;
+                                                  print("thi is selectCategory   =${editScreenController
+                                                      .selectCategory
+                                                      .value}");
+                                                });
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 25,
+                                                        height: 25,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(80),
+                                                            border: Border.all(
+                                                                width: 1)),
+                                                        child: Obx(
+                                                          () => Container(
+                                                            width: 10,
+                                                            height: 10,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            80),
+                                                                color: editScreenController
+                                                                            .selectCategory
+                                                                            .value ==
+                                                                        index
+                                                                    ? Colors
+                                                                        .blueAccent
+                                                                    : Colors
+                                                                        .white,
+                                                                border: Border.all(
+                                                                    width: 1,
+                                                                    color: Colors
+                                                                        .white)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 20,
+                                                      ),
+                                                      Text(
+                                                        homeScreenController
+                                                            .categoryList[index].category??"",
+                                                        style: const TextStyle(
+                                                            color: Colors.black87,
+                                                            fontSize: 15),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
-                )),
-          ),
+                          Obx(
+                            () => Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: editScreenController.addCategory.value ==
+                                      true
+                                  ? Row(
+                                      children: [
+                                        Container(
+                                          width: 25,
+                                          height: 25,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(80),
+                                              border: Border.all(width: 1)),
+                                        ),
+                                        SizedBox(
+                                          width: 12,
+                                        ),
+                                        Container(
+                                          width: 200,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                          ),
+                                          child: TextField(
+                                            controller: editScreenController
+                                                .newCategoryController,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide.none,
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              filled: true,
+                                              fillColor:
+                                                  Colors.black12, //<-- SEE HERE
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 12,
+                                        ),
+                                        GestureDetector(
+                                            onTap: () {
+                                              if (kDebugMode) {
+                                                print(
+                                                    "=========================================================ok");
+                                              }
+                                              homeScreenController.categories.add(
+                                                  editScreenController
+                                                      .newCategoryController
+                                                      .text);
+
+                                              AppPref().catList = json.encode(
+                                                  homeScreenController
+                                                      .categories);
+
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                              editScreenController
+                                                  .addCategory.value = false;
+                                              // homeScreenController.categories
+                                              //     .refresh();
+                                              editScreenController
+                                                  .newCategoryController
+                                                  .clear();
+                                            },
+                                            child: Text(
+                                              "Update",
+                                              style: TextStyle(
+                                                  color: Colors.blueAccent,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ))
+                                      ],
+                                    )
+                                  : Container(),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, top: 10, bottom: 50),
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {});
+                                  editScreenController.addCategory.value = true;
+                                },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 25,
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueAccent,
+                                        borderRadius: BorderRadius.circular(90),
+                                      ),
+                                      child: const Center(
+                                          child: Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                        size: 20,
+                                      )),
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    const Text(
+                                      "Add a new category",
+                                      style: TextStyle(
+                                          color: Colors.black87, fontSize: 15),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  )),
+            ),
         );
+
       },
     );
   }
@@ -1075,37 +1056,63 @@ Get.toNamed(AppRouter.homeScreen);
       ),
     );
   }
-addItem(String title, String note, String category, String logo, String image, String url){
-    var item = DataModel(title:title,note:note,category: category, logo: logo, image: image, url: url);
+
+  addItem(String title, String note, String category, String logo, String image,
+      String url) {
+    var item = DataModel(
+        title: title,
+        note: note,
+        category: category,
+        logo: logo,
+        image: image,
+        url: url,
+        timestamp: DateTime.now().toString());
     print(item.toJson());
     print(FirebaseAuth.instance.currentUser!.uid);
-    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection('qrs').add(item.toJson()).then((DocumentReference doc)
-    {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('qrs')
+        .add(item.toJson())
+        .then((DocumentReference doc) {});
+  }
 
-
-    });
-
-}
-  AddCategory(String category ){
+  AddCategory(String category) {
     var item = CategoryModel(category: category);
     print(item.toJson());
     print(FirebaseAuth.instance.currentUser!.uid);
-    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection('category').add(item.toJson()).then((DocumentReference doc){});
-
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('category')
+        .add(item.toJson())
+        .then((DocumentReference doc) {});
   }
-  UpdateItem(String title, String note, String category, String logo, String image, String url){
-    var updateitem = DataModel(title:title,note:note,category: category, logo: logo, image: image, url: url);
+
+  UpdateItem(String title, String note, String category, String logo,
+      String image, String url) {
+    var updateitem = DataModel(
+        title: title,
+        note: note,
+        category: category,
+        logo: logo,
+        image: image,
+        url: url);
     print(updateitem.toJson());
     print(FirebaseAuth.instance.currentUser!.uid);
-    Future<void> updateUserData (Map<String, dynamic>values)async{
+    Future<void> updateUserData(Map<String, dynamic> values) async {
       String id = values['id'];
     }
-    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection('qrs').doc(Get.arguments['docID']).update(updateitem.toJson());
-    print("---------------------------------${    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection('qrs').doc(FirebaseAuth.instance.currentUser!.getIdToken() as String?).update(updateitem.toJson())
-        }");
 
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('qrs')
+        .doc(Get.arguments['docID'])
+        .update(updateitem.toJson());
+    print(
+        "---------------------------------${FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection('qrs').doc(FirebaseAuth.instance.currentUser!.getIdToken() as String?).update(updateitem.toJson())}");
   }
-
 
   _launchURL() async {
     var url = homeScreenController.cameraScanResult.value.toString();
@@ -1117,4 +1124,3 @@ addItem(String title, String note, String category, String logo, String image, S
     }
   }
 }
-

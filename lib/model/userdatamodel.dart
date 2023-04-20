@@ -6,9 +6,8 @@ class DataModel {
   String? url;
   String? logo;
   String? image;
-
-  DataModel({ this.title, this.category, this.note, this.url, this.logo,
-    this.image});
+  String? timestamp;
+  DataModel({ this.title, this.category, this.note, this.url, this.logo, this.image,this.timestamp});
 
   DataModel.fromMap(Map<String, dynamic>json)
       :
@@ -17,7 +16,8 @@ class DataModel {
         note = json["note"],
         url = json["url"],
         logo = json["logo"],
-        image = json["image"];
+        image = json["image"],
+       timestamp = json["timestamp"];
 
   Map<String, dynamic> toJson() =>
       {
@@ -26,6 +26,7 @@ class DataModel {
         'note': note,
         'url': url,
         'logo': logo,
-        'image': image
+        'image': image,
+        'timestamp':timestamp,
       };
 }

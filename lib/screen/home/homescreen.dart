@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codezilla/app_route.dart';
 import 'package:codezilla/firebase_helper.dart';
 import 'package:codezilla/model/categorymodel.dart';
@@ -13,6 +12,7 @@ import 'package:codezilla/utils/enum/enum.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -33,11 +33,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-// const _clientId =
-//     "676041512066-fvrm1mavqj2ob61i34j3og82cjcjienf.apps.googleusercontent.com";
-// const _scopes = ['https://www.googleapis.com/auth/drive.file'];
-
 class _HomeScreenState extends State<HomeScreen> {
+  int selectedIndex = 0;
   final editScreenController = Get.put(EditScreenController());
   final homeScreenController = Get.find<HomeScreenController>();
   DatabaseReference databaseReference = FirebaseDatabase.instance.ref("user");
@@ -45,149 +42,37 @@ class _HomeScreenState extends State<HomeScreen> {
   List<UserModel> users = [];
   List<dynamic> data = [];
   List<CategoryModel> categorys = [];
-
-  // var qrlink = Get.arguments[0];
-  // var title = Get.arguments[1];
-  // var categories = Get.arguments[2];
-  // var note = Get.arguments[3];
-  // var image = Get.arguments[4];
   String categoryName = "";
+  String myKey = "";
 
   @override
   void initState() {
+    // WidgetsBinding.instance.addPersistentFrameCallback((timeStamp) {
+    myKey = "All";
+
     getUsers();
+    // });
     // TODO: implement initState
     super.initState();
-
-    print("--------datalist---------------${data}");
-    // editScreenController.initalGetSavedData();
-    //  SecureStorage();
-    // GoogleDrive();
   }
 
-  // final googleSignIn = GoogleSignIn.standard(scopes: [
-  //   drive.DriveApi.driveAppdataScope,
-  // ]);
-  // Future<drive.DriveApi?> _getDriveApi() async {
-  //   final googleUser = await googleSignIn.signIn();
-  //   final headers = await googleUser?.authHeaders;
-  //   if (headers == null) {
-
-  //     await showMessage(context, "Sign-in first", "Error");
-  //     return null;
-  //   }
-
-  //   final client = GoogleAuthClient(headers);
-  //   final driveApi = drive.DriveApi(client);
-  //   return driveApi;
-  // }
-  // Future<void> _uploadToHidden() async {
-  //   try {
-  //     final driveApi = await _getDriveApi();
-  //     if (driveApi == null) {
-  //       return;
-  //     }
-  //     // Not allow a user to do something else
-  //     showGeneralDialog(
-  //       context: context,
-  //       barrierDismissible: false,
-  //       transitionDuration: Duration(seconds: 2),
-  //       barrierColor: Colors.black.withOpacity(0.5),
-  //       pageBuilder: (context, animation, secondaryAnimation) => Center(
-  //         child: CircularProgressIndicator(),
-  //       ),
-  //     );
-  //   ...
-  //   } finally {
-  //   // Remove a dialog
-  //   Navigator.pop(context);
-  //   }
-  // }
-// final drive = GoogleDrive();
   bool navigate = true;
 
   Future _scanQR() async {
     var camerastatus = await Permission.camera.status;
     if (camerastatus.isGranted) {
       homeScreenController.cameraScanResult.value = (await scanner.scan())!;
-      // Get.toNamed(
-      //   AppRouter.editscanScreen,arguments: [EnumForButton.addScreen]
-      // );
+
       Get.to(
-        EditscanScreen(),
-        // arguments: {
-        //   "enumForButton": EnumForButton.addScreen,
-        // },
+        EditscanScreen(
+          enumForButton: EnumForButton.addScreen,
+        ),
       );
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => EditscanScreen(link: cameraScanResult)));
     } else {
       var isGrant = await Permission.camera.request();
       if (isGrant.isGranted) {
         homeScreenController.cameraScanResult.value = (await scanner.scan())!;
       }
-    }
-  }
-
-  getDataByCategory(int index) {
-    // homeScreenController.homeUserList.value =
-    //     editScreenController.userList
-    //         .where((p0) =>
-    //     p0.category?.toLowerCase() ==
-    //         homeScreenController.categories[index].toLowerCase())
-    //         .toList();
-    // homeScreenController.homeUserList.refresh();
-    // print(homeScreenController.homeUserList.value );
-
-    homeScreenController.homeUserList.clear();
-    if (index == 0) {
-      homeScreenController.homeUserList.addAll(editScreenController.userList);
-      homeScreenController.homeUserList.refresh();
-    } else {
-      homeScreenController.homeUserList.clear();
-      for (int i = 0; i < editScreenController.userList.length; i++) {
-        // print(editScreenController.userList[i].category);
-        // print((homeScreenController.categories[j]));
-        if (editScreenController.userList[i].category ==
-            homeScreenController.categories[index]) {
-          print("here");
-          homeScreenController.homeUserList
-              .add(editScreenController.userList[i]);
-          print("==============>   ${homeScreenController.homeUserList}");
-        }
-      }
-      homeScreenController.homeUserList.refresh();
-    }
-  }
-
-  getDataByCategory1(int index) {
-    // homeScreenController.homeUserList.value =
-    //     editScreenController.userList
-    //         .where((p0) =>
-    //     p0.category?.toLowerCase() ==
-    //         homeScreenController.categories[index].toLowerCase())
-    //         .toList();
-    // homeScreenController.homeUserList.refresh();
-    // print(homeScreenController.homeUserList.value );
-
-    homeScreenController.homeUserList.clear();
-    if (index == 0) {
-      homeScreenController.homeUserList.addAll(editScreenController.userList);
-      homeScreenController.homeUserList.refresh();
-    } else {
-      homeScreenController.homeUserList.clear();
-      for (int i = 0; i < editScreenController.userList.length; i++) {
-        // print(editScreenController.userList[i].category);
-        // print((homeScreenController.categories[j]));
-        if (editScreenController.userList[i].category ==
-            homeScreenController.categories[index]) {
-          print("here");
-          homeScreenController.homeUserList
-              .add(editScreenController.userList[i]);
-          print("==============>   ${homeScreenController.homeUserList}");
-        }
-      }
-      homeScreenController.homeUserList.refresh();
     }
   }
 
@@ -238,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: 20,
@@ -245,55 +131,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Container(
               height: 50,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: users.length,
-                physics: BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  UserModel userModel = users[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        print(users);
-                        setState(() {
-                          categoryName = userModel.category!;
-                          print(categoryName);
-                        });
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: homeScreenController.categoryList.length,
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        // String key = sortedItems.keys.elementAt(index);
 
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              selectedIndex = index;
+                              setState(() {});
 
-
-                        getDataByCategory(index);
-                      },
-                      child: Container(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              userModel.category ?? "",
-                              style: TextStyle(
-                                  fontFamily: 'MS Sans',
-                                  fontSize: 14,
-                                  color: homeScreenController
-                                              .selectCategory.value ==
-                                          index
-                                      ? Colors.white
-                                      : Colors.black),
+                              myKey = homeScreenController
+                                      .categoryList[index].category ??
+                                  "";
+                              print(myKey);
+                              sortByCategory(key: myKey);
+                            },
+                            child: Container(
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    homeScreenController
+                                            .categoryList[index].category ??
+                                        "",
+                                    style: TextStyle(
+                                        fontFamily: 'MS Sans',
+                                        fontSize: 14,
+                                        color: selectedIndex == index
+                                            ? Colors.white
+                                            : Colors.black),
+                                  ),
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                color: selectedIndex == index
+                                    ? Colors.blueAccent
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
                           ),
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              homeScreenController.selectCategory.value == index
-                                  ? Colors.blueAccent
-                                  : Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             ),
             // SizedBox(height: 150,),
@@ -306,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView.builder(
                     reverse: true,
                     shrinkWrap: true,
-                    itemCount: 5,
+                    itemCount: users.length,
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
@@ -323,22 +214,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             //   )),
                             // );
 
-                            Get.to(EditscanScreen(
-                              // enumForButton: EnumForButton.homescreen,
-                              userModel: users[index],
-                              // removeMap: index,
-                            ));
-                            //
-                            Get.to(() => EditscanScreen(), arguments: {
-                              'enumForButton': EnumForButton.homescreen,
-                              // 'title': title,
-                              // 'note': note,
-                              // // 'cetegory': cetegory,
-                              // 'logo': logo,
-                              // 'image': image,
-                              // 'docID': docID,
-                              // 'url': url
-                            });
+                            Get.to(
+                              EditscanScreen(
+                                userModel: users[index],
+                                enumForButton: EnumForButton.homescreen,
+                                // removeMap: index,
+                              ),
+                            );
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -569,34 +451,85 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   void getUsers() async {
-    users = await firebaseService.getUsers();
-    print("this is sssss=========${users}");
-    Map<String, List<Map<String, dynamic>>> sortedData = sortData(users);
+    users.clear();
+    sortedItems.clear();
+    homeScreenController.categoryList.clear();
 
-    print(users);
-    categorys = await firebaseService.getCategory();
+    // homeScreenController.categoryList.forEach((element) {
+    //   if (element == CategoryModel(category: "All") ||
+    //       element == CategoryModel(category: "Restaurants") ||
+    //       element == CategoryModel(category: "Website Url") ||
+    //       element == CategoryModel(category: "Business Card") ||
+    //       element == CategoryModel(category: "Wifi") ||
+    //       element == CategoryModel(category: "Email")) {
+    //     homeScreenController.categoryList.remove(element);
+    //   }
+    // });
+    users = await firebaseService.getUsers();
+    users.forEach((item) {
+      if (!sortedItems.containsKey(item.category)) {
+        sortedItems[item.category!] = [];
+      }
+      sortedItems[item.category]!.add(item.toJson());
+    });
+    setState(() {});
+    // users.clear();
+
+    for (int i = 0; i <= 5; i++) {
+      if (i == 0) {
+        homeScreenController.categoryList
+            .insert(0, CategoryModel(category: "All"));
+      }
+      else if (i == 1) {
+        homeScreenController.categoryList
+            .insert(1, CategoryModel(category: "Restaurants"));
+      } else if (i == 2) {
+        homeScreenController.categoryList
+            .insert(2, CategoryModel(category: "Website Url"));
+      } else if (i == 3) {
+        homeScreenController.categoryList
+            .insert(3, CategoryModel(category: "Business Card"));
+      } else if (i == 4) {
+        homeScreenController.categoryList
+            .insert(4, CategoryModel(category: "Wifi"));
+      } else {
+        homeScreenController.categoryList
+            .insert(5, CategoryModel(category: "Email"));
+      }
+    }
+    for (int i = 0; i <= sortedItems.keys.length; i++) {
+      homeScreenController.categoryList.insert(i + 6,
+          CategoryModel(category: sortedItems.keys.toList(growable: false)[i]));
+      setState(() {});
+    }
+
+    sortByCategory(key: myKey);
+
+    setState(() {});
+  }
+
+  sortByCategory({String? key}) {
+    if (key == "All") {
+      users.clear();
+      sortedItems.forEach((key, value) {
+        value.forEach((element) {
+          users.add(UserModel.fromJson(element));
+        });
+      });
+    } else if (!(key == "All")) {
+      if (sortedItems.containsKey(key)) {
+        users.clear();
+        List<Map<String, dynamic>>? list = sortedItems[key];
+        for (int i = 0; i < list!.length; i++) {
+          users.add(UserModel.fromJson(list[i]));
+        }
+        print(users);
+        setState(() {});
+      }
+    } else {}
     setState(() {});
   }
 }
 
-Map<String, List<Map<String, dynamic>>> sortData(List<Map<String, dynamic>> data) {
-  Map<String, List<Map<String, dynamic>>> sortedMap =<String, List<Map<String, dynamic>>>{};;
-
-  for (var item in data) {
-    String category = item['category'];
-
-    if (sortedMap.containsKey(category)) {
-      sortedMap[category]!.add(item);
-    } else {
-      sortedMap[category] = [item];
-    }
-  }
-
-  sortedMap.forEach((key, value) {
-    value.sort((a, b) => a['name'].compareTo(b['name']));
-  });
-
-  return sortedMap;
-}
+Map<String, List<Map<String, dynamic>>> sortedItems = {};

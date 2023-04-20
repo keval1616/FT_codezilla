@@ -13,7 +13,7 @@ class FirebaseService {
     QuerySnapshot querySnapshot = await _db
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('qrs')
+        .collection('qrs').orderBy('timestamp', descending: false)
         .get();
     // retrieve all documents from the 'users' collection
 
@@ -57,9 +57,9 @@ class FirebaseService {
   }
 }
 
-//
-// class CustomModel{
-//   String category ="";
-//   UserModel? userModel;
-//   CustomModel({this.userModel,this.category=""});
-// }
+
+class CustomModel{
+  String category ="";
+  List<UserModel>? userModelList = [];
+  CustomModel({this.userModelList,this.category=""});
+}

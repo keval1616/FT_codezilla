@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:codezilla/model/categorymodel.dart';
 import 'package:codezilla/model/user_model.dart';
 import 'package:codezilla/model/userdatamodel.dart';
 import 'package:codezilla/screen/home/homeController.dart';
@@ -24,6 +25,7 @@ class EditScreenController extends GetxController {
   RxBool addCategory = false.obs;
   RxBool selecticon = false.obs;
   Rx<UserModel> userModel = Rx<UserModel>(UserModel());
+  Rx<CategoryModel> SelectCategoriesModel = Rx<CategoryModel>(CategoryModel());
 
   // RxList  CategoriesList =
   //     ["#All", "#Restorent", "#Websites", "#Buisness Center", "#class"].obs;

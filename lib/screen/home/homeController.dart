@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:codezilla/app_route.dart';
+import 'package:codezilla/model/categorymodel.dart';
 import 'package:codezilla/model/user_model.dart';
 import 'package:codezilla/model/userdatamodel.dart';
 import 'package:codezilla/pref/app_Prefrance.dart';
@@ -11,8 +12,8 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreenController extends GetxController {
-  DataModel dataModel = DataModel();
 
+  RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
   RxInt selectCategory = 0.obs;
   RxList categories =  [
     // "#All".tr,

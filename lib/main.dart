@@ -35,11 +35,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final List<StreamSubscription> _streams = [];
 
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver;
     _internetAvailability();
     // getGeoLocationPosition();
+
     debugPrint(
         "------------------>>>>>>>>>>>>${Get.deviceLocale!.languageCode}");
     super.initState();
