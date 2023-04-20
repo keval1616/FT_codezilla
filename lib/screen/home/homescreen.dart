@@ -476,33 +476,36 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
     // users.clear();
 
-    for (int i = 0; i <= 5; i++) {
+    for (int i = 0; i <= sortedItems.keys.length; i++) {
       if (i == 0) {
         homeScreenController.categoryList
             .insert(0, CategoryModel(category: "All"));
-      }
-      else if (i == 1) {
-        homeScreenController.categoryList
-            .insert(1, CategoryModel(category: "Restaurants"));
-      } else if (i == 2) {
-        homeScreenController.categoryList
-            .insert(2, CategoryModel(category: "Website Url"));
-      } else if (i == 3) {
-        homeScreenController.categoryList
-            .insert(3, CategoryModel(category: "Business Card"));
-      } else if (i == 4) {
-        homeScreenController.categoryList
-            .insert(4, CategoryModel(category: "Wifi"));
-      } else {
-        homeScreenController.categoryList
-            .insert(5, CategoryModel(category: "Email"));
-      }
+      }else{
+        homeScreenController.categoryList.insert(i,
+            CategoryModel(category: sortedItems.keys.toList(growable: false)[i-1]));
+      };
+      // else if (i == 1) {
+      //   homeScreenController.categoryList
+      //       .insert(1, CategoryModel(category: "Restaurants"));
+      // } else if (i == 2) {
+      //   homeScreenController.categoryList
+      //       .insert(2, CategoryModel(category: "Website Url"));
+      // } else if (i == 3) {
+      //   homeScreenController.categoryList
+      //       .insert(3, CategoryModel(category: "Business Card"));
+      // } else if (i == 4) {
+      //   homeScreenController.categoryList
+      //       .insert(4, CategoryModel(category: "Wifi"));
+      // } else {
+      //   homeScreenController.categoryList
+      //       .insert(5, CategoryModel(category: "Email"));
+      // }
     }
-    for (int i = 0; i <= sortedItems.keys.length; i++) {
-      homeScreenController.categoryList.insert(i + 6,
-          CategoryModel(category: sortedItems.keys.toList(growable: false)[i]));
-      setState(() {});
-    }
+    // for (int i = 0; i <= sortedItems.keys.length; i++) {
+    //   homeScreenController.categoryList.insert(i + 6,
+    //       CategoryModel(category: sortedItems.keys.toList(growable: false)[i]));
+    //   setState(() {});
+    // }
 
     sortByCategory(key: myKey);
 

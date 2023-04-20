@@ -60,11 +60,16 @@ class _EditscanScreenState extends State<EditscanScreen> {
         editScreenController.SelectCategoriesModel.value.category = widget.userModel?.category??"";
         editScreenController.title.text = widget.userModel?.title??"";
         editScreenController.note.text = widget.userModel?.note??"";
-        editScreenController.SelectCategories.value =widget.userModel?.category??"";
         homeScreenController
             .cameraScanResult.value = widget.userModel?.url??"";
         editScreenController
             .image.value = File("${widget.userModel?.image??""}");
+
+       editScreenController.selectCategory.value= homeScreenController.categoryList.indexWhere((element)=>element.category==widget.userModel?.category);
+
+
+
+
         editScreenController.saveIcon.value = "${widget.userModel?.logo??""}";
       }
 
@@ -247,8 +252,8 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                   width: 20,
                                 ),
                                 Container(
-                                  child: editScreenController
-                                          .SelectCategories.value.isEmpty
+                                  child: editScreenController.SelectCategoriesModel.value.category!.isNotEmpty
+
                                       ? Text(editScreenController.SelectCategoriesModel.value.category??"")
                                       : Text("jkj"),
                                 ),
@@ -785,14 +790,10 @@ class _EditscanScreenState extends State<EditscanScreen> {
                                                 print(
                                                     "=========================================================ok");
                                               }
-                                              homeScreenController.categories.add(
-                                                  editScreenController
+                                              homeScreenController.categoryList.add(
+                                                  CategoryModel(category: editScreenController
                                                       .newCategoryController
-                                                      .text);
-
-                                              AppPref().catList = json.encode(
-                                                  homeScreenController
-                                                      .categories);
+                                                      .text));
 
                                               FocusManager.instance.primaryFocus
                                                   ?.unfocus();
